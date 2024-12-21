@@ -1,22 +1,25 @@
-import './App.css'
-import { NavBar } from './components/NavBar';
-import LoginPage from './pages/loginPage'
-import RegisterPage from './pages/RegisterPage'
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import React from "react";
+import "./App.css";
+import AdminPage from "./pages/AdminPage";
+import HomePage from "./pages/HomePage";
+import ResidentPage from "./pages/ResidentPage";
+import ProtectedRoutes from "./utils/ProtectedRoutes";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
- 
   return (
-    <>
     <BrowserRouter>
-    <NavBar/>
-    <Routes>
-      <Route path='/' element={<LoginPage/>} />
-      <Route path='/register' element={<RegisterPage/>} />
-    </Routes>
+      <Routes>
+        <Route path="/*" element={<HomePage />} />
+        <Route path="/admin/*" element={<AdminPage />} />
+        
+        <Route element={<ProtectedRoutes />}>
+        <Route path="/resident/*" element={<ResidentPage />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;

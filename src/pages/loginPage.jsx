@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { LoginStatusContext } from "./HomePage";
 import registerSideImage1 from "../assets/register-side-image 1.webp";
 import registerSideImage2 from "../assets/register-side-image 2.webp";
 import registerSideImage3 from "../assets/register-side-image 3.avif";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,30 +12,48 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
-
   //api url
   const api = import.meta.env.VITE_API_URL;
-
+  //slider image
   const images = [registerSideImage1, registerSideImage2, registerSideImage3];
+  //react hooks
+  const { loginStatus, setLoginStatus } = useContext(LoginStatusContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
   //user Login
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Handle form submission to logn user
+    // Handle form submission to login user
     try {
       await axios
         .post(api + "/login", { email, password })
         .then((res) => {
           console.log(res);
           toast.success(res.data.message);
-          localStorage.setItem('token',res.data.token)
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("userid", res.data.userid);
+          localStorage.setItem("role", res.data.role);
+          localStorage.setItem("username", res.data.username);
+          setLoginStatus(true);
+          //redirecting room component
+          setTimeout(() => {
+            navigate("/resident");
+          }, 1500);
         })
         .catch((err) => {
           console.log(err);
-          toast.error("incorrect password");
+          toast.error(err.response.data.message);
         });
     } catch (error) {
-        toast.error(error)
+      toast.error(error);
       console.log(error);
     }
   };
@@ -94,6 +113,15 @@ export default function LoginPage() {
             >
               SignIn
             </button>
+            <button
+              className="bg-indigo-100 hover:bg-indigo-500 text-white rounded-xl p-1"
+              onClick={() => {
+                setEmail("azardevacc@gmail.com");
+                setPassword("azardev@123");
+              }}
+            >
+              Demo account
+            </button>
             {/* Google sign in  */}
             {/* 
             <div className="relative">
@@ -139,12 +167,10 @@ export default function LoginPage() {
               </div>
 
               <div className="text-center">
-                <h2 className="text-3xl font-bold mb-4">
-                  92+ Ready Coded Blocks
-                </h2>
+                <h2 className="text-3xl font-bold mb-4">Share And Care</h2>
                 <p className="text-gray-500">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Turpis morbi pulvinar venenatis non.
+                  Best Place to Share and relax yourself feel like home and
+                  Secure
                 </p>
 
                 <div className="flex justify-center gap-2 mt-6">

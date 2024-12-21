@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import registerSideImage1 from "../assets/register-side-image 1.webp";
 import registerSideImage2 from "../assets/register-side-image 2.webp";
 import registerSideImage3 from "../assets/register-side-image 3.avif";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisterPage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,25 +30,25 @@ export default function RegisterPage() {
   //account creation
   const handleSubmit = async (e) => {
     e.preventDefault();
-  //checking confirm password 
-  if(password!=confirmPassword){
-    toast.error("Password not Matching");
-    return
-  }
+    //checking confirm password
+    if (password != confirmPassword) {
+      toast.error("Password not Matching");
+      return;
+    }
     // Handle form submission to register user
     try {
-     await axios
-        .post(api + "/register", { username,email, password })
+      await axios
+        .post(api + "/register", { username, email, password })
         .then((res) => {
           console.log(res);
-          toast.success(res.data.message,"Redirecting to login page")
-          setTimeout(()=>{
-            navigate('/');
-          },4000)
+          toast.success(res.data.message, "Redirecting to login page");
+          setTimeout(() => {
+            navigate("/");
+          }, 4000);
         })
         .catch((err) => {
           console.log(err);
-          toast.error(err)
+          toast.error(err);
         });
     } catch (error) {
       console.log(error);
@@ -156,9 +156,9 @@ export default function RegisterPage() {
                 className="ml-2 block text-sm text-gray-700"
               >
                 I agree to the{" "}
-                <a href="#" className="text-purple-600 hover:text-purple-500">
+                <span href="#" className="text-purple-600 hover:text-purple-500">
                   Terms & Conditions
-                </a>
+                </span>
               </label>
             </div>
 
@@ -213,12 +213,11 @@ export default function RegisterPage() {
               </div>
 
               <div className="text-center">
-                <h2 className="text-3xl font-bold mb-4">
-                  92+ Ready Coded Blocks
+              <h2 className="text-3xl font-bold mb-4">
+                  Share And Care
                 </h2>
                 <p className="text-gray-500">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Turpis morbi pulvinar venenatis non.
+                Best Place to Share and relax yourself feel like home and Secure
                 </p>
 
                 <div className="flex justify-center gap-2 mt-6">
@@ -237,7 +236,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }
