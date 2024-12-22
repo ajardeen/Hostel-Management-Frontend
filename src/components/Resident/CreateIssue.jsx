@@ -1,21 +1,15 @@
 import React, { useState } from "react";
-import axios from "axios";
-const CreateIssue = () => {
+import API from "../../api/axios";
+const CreateIssue = ({ residentId }) => {
   const [issueDetails, setIssueDetails] = useState("");
   const [priority, setPriority] = useState("Low");
-
-  // Retrieve residentId from local storage
-  const residentId = localStorage.getItem("userid");
-  const username = localStorage.getItem("username");
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newIssue = { residentId, issueDetails, priority };
-    // API endpoint URL
-    const api = import.meta.env.VITE_API_URL;
     try {
-     await axios.post(api+"/maintenance/create-maintenance-requests",
+     await API.post("/maintenance/create-maintenance-requests",
        newIssue
       ).then((res) => {
         console.log(res.data);

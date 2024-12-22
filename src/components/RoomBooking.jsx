@@ -16,6 +16,14 @@ function RoomBooking() {
     checkInDate: "",
     checkOutDate: "",
     status: "Checked In",
+    utilities: { 
+        washing: 200,
+        electricity: 500,
+        water: 0,
+        internet: 0,
+        maintenance: 200,
+        cleaning: 150,
+      }
   });
 
   //api url

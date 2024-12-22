@@ -1,49 +1,122 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-
-function SidePanel({options}) {
-  const location = useLocation(); // To track current active route
+import { useAuth } from "../services/AuthProvider";
+function SidePanel({ options }) {
+  const location = useLocation();
+  const { logout } = useAuth();
 
   return (
-    <>
-      <div className="flex items-start">
-        <nav id="sidebar" className="lg:min-w-[250px] w-max max-lg:min-w-8">
-          <div
-            id="sidebar-collapse-menu"
-            style={{ height: "calc(100vh - 72px)" }}
-            className="bg-white shadow-lg h-screen fixed py-6 px-4 top-[70px] left-0 overflow-auto z-[99] lg:min-w-[250px] lg:w-max max-lg:w-0 max-lg:invisible transition-all duration-500"
-          > 
-            <div className="mt-6">
-              <ul className="mt-3 space-y-2">
-                {options.map((option, index) => (
-                  <Link 
-                    key={index} 
-                    to={option.link}
-                    className={`block transition-all duration-300 ${
-                      location.pathname === option.link 
-                        ? 'bg-green-100' 
-                        : ''
-                    }`}
-                  >
-                    <li className="transform transition-transform duration-200 hover:translate-x-1">
-                      <span className={`text-gray-800 text-sm flex items-center rounded-md px-4 py-2 transition-all duration-300
-                        hover:bg-green-50 hover:text-green-600
-                        ${location.pathname === option.link 
-                          ? 'bg-green-100 text-green-700' 
-                          : ''
-                        }`}
-                      >
-                        <span>{option.name}</span>
-                      </span>
-                    </li>
-                  </Link>
-                ))}
-              </ul>
-            </div>
+    <div className="flex items-start h-[98vh] bg-[#f5f7f9] rounded-tl-3xl">
+      <nav
+        id="sidebar"
+        className="w-[250px] h-full bg-[#f5f7f9]  flex flex-col rounded-tl-3xl "
+      >
+        {/* User Info Section */}
+        <div className="flex items-center space-x-3 px-6 py-4 border-b border-gray-200 rounded-tl-lg ">
+          <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center  text-gray-500 font-bold">
+            US
           </div>
-        </nav>
-      </div>
-    </>
+          <div>
+            <h3 className="text-gray-800 font-semibold">Kevin Dukkon</h3>
+            <p className="text-sm text-gray-500">hey@kevdu.co</p>
+          </div>
+        </div>
+
+        {/* Search Bar */}
+        <div className="px-4 py-2 border-b border-gray-200">
+          <input
+            type="text"
+            placeholder="Search"
+            className="w-full px-4 py-2 bg-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        {/* Menu Options */}
+        <div className="flex-grow overflow-y-auto">
+          <ul className="mt-4 space-y-1">
+            {options.map((option, index) => (
+              <Link key={index} to={option.link}>
+                <li
+                  className={`flex items-center px-4 py-2 my-2 text-sm font-medium rounded-lg transition
+                    ${
+                      location.pathname === option.link
+                        ? "bg-white text-gray-900 shadow-lg  ml-2"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:shadow-md"
+                    }`}
+                >
+                  <span className="h-5 w-5 text-gray-500">{option.icon}</span>
+                  <span className="ml-4">{option.name}</span>
+                </li>
+              </Link>
+            ))}
+          </ul>
+        </div>
+
+        {/* Account and Logout Section */}
+        <div className="px-6 py-4 border-t border-gray-200">
+          <ul className="space-y-1">
+            {/* Account Link */}
+            <Link to="/resident/account">
+              <li
+                className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition
+                  ${
+                    location.pathname === "/account"
+                      ? "bg-gray-100 text-gray-900"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  }`}
+              >
+                <span className="h-5 w-5 text-gray-500">
+                  {/* Account Icon */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5.121 17.804A12.066 12.066 0 0112 15c2.486 0 4.813.755 6.879 2.038M15 9a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </span>
+                <span className="ml-4">Account</span>
+              </li>
+            </Link>
+
+            {/* Logout Link */}
+            <Link to="/">
+              <li
+                className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition
+                  text-red-600 hover:bg-red-50 hover:text-red-800`}
+                  onClick={logout}
+              >
+                <span className="h-5 w-5 text-red-500">
+                  {/* Logout Icon */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5m0 4a4 4 0 01-8 0"
+                    />
+                  </svg>
+                </span>
+                <span className="ml-4">Logout</span>
+              </li>
+            </Link>
+          </ul>
+        </div>
+      </nav>
+    </div>
   );
 }
 

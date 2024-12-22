@@ -1,17 +1,14 @@
 // ResidentPage.jsx
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../../api/axios";
 
-const ResidentRequestStatus = () => {
-  const api = import.meta.env.VITE_API_URL;
-  const residentId = localStorage.getItem("userid");
+const ResidentRequestStatus = ({ residentId }) => {
   const [maintenanceRequests, setMaintenanceRequests] = useState([]);
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get(
-          api + `/resident/maintenance/${residentId}`
+        const response = await API.get(`/resident/maintenance/${residentId}`
         );
         setMaintenanceRequests(response.data.filteredData);
         console.log(response.data);

@@ -10,10 +10,6 @@ export const LoginStatusContext = createContext();
 function HomePage() {
   const [loginStatus, setLoginStatus] = useState(false);
 
-  useEffect(() => {
-    console.log(loginStatus, "in app");
-  }, [loginStatus]);
-
   return (
     <LoginStatusContext.Provider value={{ loginStatus, setLoginStatus }}>
       <NavBar />

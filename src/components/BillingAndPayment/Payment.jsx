@@ -1,6 +1,6 @@
 import React from "react";
-
-const Checkout = () => {
+import { useNavigate } from "react-router-dom";
+const Payment = () => {
   return (
     <section className="bg-white py-8 antialiased md:py-16">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
@@ -146,4 +146,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default Payment;

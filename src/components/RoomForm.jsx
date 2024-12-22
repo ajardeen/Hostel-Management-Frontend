@@ -73,7 +73,7 @@ const RoomForm = () => {
       </h2>
       <hr />
       <form
-        className="font-[sans-serif] text-[#333] max-w-4xl mx-auto px-6 my-6"
+        className="font-[sans-serif] text-[#333] max-w-4xl  px-6 my-6"
         onSubmit={handleSubmit}
       >
         <div className="grid sm:grid-cols-2 gap-10">

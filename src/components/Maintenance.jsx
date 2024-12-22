@@ -105,7 +105,7 @@ const Maintenance = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
+    <div className="max-w-5xl min-h-screen  p-6 bg-gray-100 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Maintenance Issues
       </h2>

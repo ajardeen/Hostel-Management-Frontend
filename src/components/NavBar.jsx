@@ -15,9 +15,7 @@ export const NavBar = () => {
   const closeMenu = () => {
     setMenuOpen(false);
   };
-  useEffect(() => {
-    console.log(loginStatus, "in nav");
-  }, [loginStatus]);
+
   return (
     <header className="bg-white lg:py-3 ">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 ">

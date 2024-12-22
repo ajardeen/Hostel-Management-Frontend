@@ -1,98 +1,118 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import logo from "../../assets/hosteledge logo.png";
 
 const Invoice = () => {
+  const [invoiceData, setInvoiceData] = useState({});
+  const navigate = useNavigate();
+  const { residentId } = useParams();
+  const api = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const fetchInvoiceData = async () => {
+      try {
+        const response = await axios.get(`${api}/resident/invoice/${residentId}`);
+        setInvoiceData(response.data.invoiceDetails);
+      } catch (error) {
+        console.error("Error fetching invoice data:", error);
+        navigate("/resident");
+      }
+    };
+
+    if (residentId) {
+      fetchInvoiceData();
+    } else {
+      navigate("/resident");
+    }
+  }, [residentId, api, navigate]);
+
   return (
-    <div className="bg-white rounded-lg shadow-lg px-8 py-10 max-w-xl mx-auto">
+    <div className="bg-white rounded-lg shadow-lg p-4 max-w-xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <img
-            className="h-8 w-8 mr-1"
-            src={logo}
-            alt="Logo"
-          />
-          <div className="text-gray-700 font-bold text-lg">
-           HosteLedge
-          </div>
+          <img className="h-6 w-6 mr-1" src={logo} alt="Logo" />
+          <div className="text-gray-700 font-bold">HosteLedge</div>
         </div>
         <div className="text-gray-700">
-          <div className="font-bold text-xl mb-2">INVOICE</div>
-          <div className="text-sm">Date: 01/05/2023</div>
-          <div className="text-sm">Invoice #: INV12345</div>
+          <div className="font-bold text-base">INVOICE</div>
+          <div className="text-xs">Date: {new Date(invoiceData.invoiceDate).toLocaleDateString()}</div>
+          <div className="text-xs">#{invoiceData.invoiceNumber}</div>
         </div>
       </div>
 
-      {/* Billing Information */}
-      <div className="border-b-2 border-gray-300 pb-8 mb-8">
-        <h2 className="text-2xl font-bold mb-4">Bill To:</h2>
-        <div className="text-gray-700 mb-2">John Doe</div>
-        <div className="text-gray-700 mb-2">123 Main St.</div>
-        <div className="text-gray-700 mb-2">Anytown, USA 12345</div>
-        <div className="text-gray-700">johndoe@example.com</div>
+      {/* Hostel and Resident Information */}
+      <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+        <div>
+          <h2 className="font-bold mb-1">Hostel Details:</h2>
+          <div className="text-gray-700">HosteLedge</div>
+          <div className="text-gray-700">123 Hostel Street</div>
+          <div className="text-gray-700">support@hosteledge.com</div>
+        </div>
+        <div>
+          <h2 className="font-bold mb-1">Bill To:</h2>
+          <div className="text-gray-700">{invoiceData.username}</div>
+          <div className="text-gray-700">Room: {invoiceData.roomNumber}</div>
+          <div className="text-gray-700">{invoiceData.email}</div>
+        </div>
       </div>
 
       {/* Items Table */}
-      <table className="w-full text-left mb-8">
+      <table className="w-full text-left text-sm mb-4">
         <thead>
-          <tr>
-            <th className="text-gray-700 font-bold uppercase py-2">
-              Description
-            </th>
-            <th className="text-gray-700 font-bold uppercase py-2">Quantity</th>
-            <th className="text-gray-700 font-bold uppercase py-2">Price</th>
-            <th className="text-gray-700 font-bold uppercase py-2">Total</th>
+          <tr className="border-b">
+            <th className="py-1">Description</th>
+            <th className="py-1">Amount</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className="py-4 text-gray-700">Product 1</td>
-            <td className="py-4 text-gray-700">1</td>
-            <td className="py-4 text-gray-700">$100.00</td>
-            <td className="py-4 text-gray-700">$100.00</td>
-          </tr>
-          <tr>
-            <td className="py-4 text-gray-700">Product 2</td>
-            <td className="py-4 text-gray-700">2</td>
-            <td className="py-4 text-gray-700">$50.00</td>
-            <td className="py-4 text-gray-700">$100.00</td>
-          </tr>
-          <tr>
-            <td className="py-4 text-gray-700">Product 3</td>
-            <td className="py-4 text-gray-700">3</td>
-            <td className="py-4 text-gray-700">$75.00</td>
-            <td className="py-4 text-gray-700">$225.00</td>
-          </tr>
+          {[
+            ['Room Fees', invoiceData.roomfees],
+            ['Washing', invoiceData.washing],
+            ['Electricity', invoiceData.electricity],
+            ['Water', invoiceData.water],
+            ['Internet', invoiceData.internet],
+            ['Maintenance', invoiceData.maintenance],
+            ['Cleaning', invoiceData.cleaning],
+          ].map(([desc, amount]) => (
+            <tr key={desc} className="border-b">
+              <td className="py-1">{desc}</td>
+              <td className="py-1">₹{amount}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
-      {/* Subtotal */}
-      <div className="flex justify-end mb-8">
-        <div className="text-gray-700 mr-2">Subtotal:</div>
-        <div className="text-gray-700">$425.00</div>
+      {/* Totals */}
+      <div className="text-sm">
+        <div className="flex justify-between py-1">
+          <span>Subtotal:</span>
+          <span>₹{invoiceData.subTotal}</span>
+        </div>
+        <div className="flex justify-between py-1">
+          <span>Tax:</span>
+          <span>₹{invoiceData.tax}</span>
+        </div>
+        <div className="flex justify-between py-1 font-bold">
+          <span>Total:</span>
+          <span>₹{invoiceData.total}</span>
+        </div>
       </div>
-
-      {/* Tax */}
-      <div className="text-right mb-8">
-        <div className="text-gray-700 mr-2">Tax:</div>
-        <div className="text-gray-700">$25.50</div>
-      </div>
-
-      {/* Total */}
-      <div className="flex justify-end mb-8">
-        <div className="text-gray-700 mr-2">Total:</div>
-        <div className="text-gray-700 font-bold text-xl">$450.50</div>
+      <div className="flex justify-center mt-8 items-center">
+        <button
+          onClick={() => navigate(`/resident/payment/${residentId}`)}
+          className="inline-flex w-full justify-center items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          PayNow : ₹{invoiceData.total}
+        </button>
       </div>
 
       {/* Footer */}
-      <div className="border-t-2 border-gray-300 pt-8 mb-8">
-        <div className="text-gray-700 mb-2">
-          Payment is due within 30 days. Late payments are subject to fees.
-        </div>
-        <div className="text-gray-700 mb-2">
-          Please make checks payable to Your Company Name and mail to:
-        </div>
-        <div className="text-gray-700">123 Main St., Anytown, USA 12345</div>
+      <div className="text-xs text-gray-700 mt-4">
+        <div>Payment is due within 30 days. Late payments are subject to a 5% fee.</div>
+        <div>Queries: billing@hosteledge.com</div>
+        <div>Thank you for staying with HosteLedge!</div>
       </div>
     </div>
   );

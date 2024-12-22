@@ -7,11 +7,12 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useAuth } from "../services/AuthProvider";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { login } = useAuth();
   //api url
   const api = import.meta.env.VITE_API_URL;
   //slider image
@@ -33,24 +34,28 @@ export default function LoginPage() {
 
     // Handle form submission to login user
     try {
-      await axios
-        .post(api + "/login", { email, password })
+      await axios.post(api+"/login", { email, password })
         .then((res) => {
-          console.log(res);
+          console.log("res",res);
           toast.success(res.data.message);
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("userid", res.data.userid);
-          localStorage.setItem("role", res.data.role);
-          localStorage.setItem("username", res.data.username);
+         
+          localStorage.setItem("userData", JSON.stringify({
+            token: res.data.token,
+            userid: res.data.userid,
+            role: res.data.role,
+            firstName: res.data.firstName,
+            lastName: res.data.lastName,
+            username: res.data.username,
+          }));
+          login(res.data.token,res.data.role);//save token in useAuth because of its successfully logged in
           setLoginStatus(true);
-          //redirecting room component
-          setTimeout(() => {
-            navigate("/resident");
-          }, 1500);
+          setTimeout(()=>{
+            navigate('/resident')
+          },1200)
         })
         .catch((err) => {
           console.log(err);
-          toast.error(err.response.data.message);
+          toast.error("login error");
         });
     } catch (error) {
       toast.error(error);
