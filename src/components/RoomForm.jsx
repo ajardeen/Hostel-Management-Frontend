@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import { toast, ToastContainer } from "react-toastify";
 const RoomForm = () => {
   const [roomNumber, setRoomNumber] = useState("");
@@ -13,18 +13,15 @@ const RoomForm = () => {
   const [preferences, setPreferences] = useState("");
   const [roomfees, setRoomfees] = useState("");
 
-  //api url
-  const admin_api = import.meta.env.VITE_ADMIN_API_URL;
   useEffect(() => {
     console.log("Capacity:", capacity);
     console.log("Occupied:", occupied);
-    
   }, [occupied, capacity]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(roomNumber, capacity, occupied, availabilityStatus, type);
-   
+
     if (availabilityStatus === "Select Availability") {
       alert("Please select availability status");
       return;
@@ -42,8 +39,7 @@ const RoomForm = () => {
     console.log("Room Data:", roomData);
     // Handle form submission to login user
     try {
-      await axios
-        .post(admin_api + "/createroom", roomData)
+      await API.post("/createroom", roomData)
         .then((res) => {
           console.log(res);
           toast.success(res.data.message);
@@ -68,12 +64,12 @@ const RoomForm = () => {
 
   return (
     <>
-      <h2 className="text-2xl font-semibold text-[#333] mb-4 uppercase">
+      <h2 className="text-2xl font-semibold text-[#333] mb-4 uppercase text-center">
         Add Room
       </h2>
-      <hr />
+    
       <form
-        className="font-[sans-serif] text-[#333] max-w-4xl  px-6 my-6"
+        className="font-[sans-serif] text-[#333] max-w-4xl  px-6 my-6 mx-auto"
         onSubmit={handleSubmit}
       >
         <div className="grid sm:grid-cols-2 gap-10">
@@ -127,20 +123,16 @@ const RoomForm = () => {
 
           <div className="relative flex items-center">
             <label className="text-[13px] absolute top-[-10px] left-0">
-              Occupied
+              Room Fees ₹
             </label>
             <input
               type="number"
-              name="occupied"
-              min={0}
-              value={occupied}
+              name="roomfees"
+              value={roomfees}
+              min={1}
+              onChange={(e) => setRoomfees(e.target.value)}
+              placeholder="Enter your room fees ₹"
               required
-              disabled
-              onChange={(e) => {
-                const newValue = parseInt(e.target.value);
-                setOccupied(newValue <= capacity ? newValue : capacity);
-              }}
-              placeholder="eg.0 or 1"
               className="px-2 pt-5 pb-2 bg-white w-full text-sm border-b-2 border-gray-100 focus:border-[#333] outline-none"
             />
           </div>
@@ -179,22 +171,6 @@ const RoomForm = () => {
             />
           </div>
 
-          <div className="relative flex items-center">
-            <label className="text-[13px] absolute top-[-10px] left-0">
-              Room Fees ₹
-            </label>
-            <input
-              type="number"
-              name="roomfees"
-              value={roomfees}
-              min={1}
-              onChange={(e) => setRoomfees(e.target.value)}
-              placeholder="Enter your room fees ₹"
-              required
-              className="px-2 pt-5 pb-2 bg-white w-full text-sm border-b-2 border-gray-100 focus:border-[#333] outline-none"
-            />
-          </div>
-
           <div className="relative flex items-center sm:col-span-2">
             <label className="text-[13px]  top-[10px] left-0 mr-10">
               Features
@@ -228,12 +204,14 @@ const RoomForm = () => {
           </div>
         </div>
 
+        <div className="flex justify-end">
         <button
           type="submit"
-          className="mt-10 px-2 py-2.5 w-full rounded-sm text-sm bg-[#333] hover:bg-[#222] text-white"
+          className="mt-10 w-fit px-6  py-2.5 rounded-lg text-sm bg-[#333] hover:bg-[#222] text-white "
         >
           Submit
         </button>
+        </div>
         <ToastContainer />
       </form>
     </>

@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import API from "../../api/axios";
 import logo from "../../assets/hosteledge logo.png";
 
-const Invoice = () => {
+const Invoice = ({ residentId }) => {
   const [invoiceData, setInvoiceData] = useState({});
   const navigate = useNavigate();
-  const { residentId } = useParams();
   const api = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchInvoiceData = async () => {
       try {
-        const response = await axios.get(`${api}/resident/invoice/${residentId}`);
+        const response = await API.get(`/resident/invoice/${residentId}`);
         setInvoiceData(response.data.invoiceDetails);
       } catch (error) {
         console.error("Error fetching invoice data:", error);

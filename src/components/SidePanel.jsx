@@ -1,12 +1,22 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../services/AuthProvider";
-function SidePanel({ options }) {
+import logotext from "../assets/hosteledge logo.png";
+import logo from "../assets/hosteledge logo text.png";
+function SidePanel({ options, username, useremail }) {
   const location = useLocation();
-  const { logout } = useAuth();
+  const { role, logout } = useAuth();
+  const accountUrl = `/${role}/account`;
 
   return (
-    <div className="flex items-start h-[98vh] bg-[#f5f7f9] rounded-tl-3xl">
+    <div className="flex flex-col items-center h-[98vh] bg-[#f5f7f9] rounded-tl-3xl">
+       <div className="flex-shrink-0 justify-center items-center mt-2 rounded-tl-3xl">
+          <span className="flex justify-center items-center  bg-gradient-to-r from-green-200 to-[#f5f7f9] rounded-lg px-4 py-1">
+            <img className="w-auto h-8 lg:h-10" src={logotext} alt="Logo" />
+            <img className="w-auto h-8 lg:h-8" src={logo} alt="Logo" />
+          </span>
+        </div>
+
       <nav
         id="sidebar"
         className="w-[250px] h-full bg-[#f5f7f9]  flex flex-col rounded-tl-3xl "
@@ -17,8 +27,8 @@ function SidePanel({ options }) {
             US
           </div>
           <div>
-            <h3 className="text-gray-800 font-semibold">Kevin Dukkon</h3>
-            <p className="text-sm text-gray-500">hey@kevdu.co</p>
+            <h3 className="text-gray-800 font-semibold">{username}</h3>
+            <p className="text-sm text-gray-500">{useremail}</p>
           </div>
         </div>
 
@@ -51,12 +61,12 @@ function SidePanel({ options }) {
             ))}
           </ul>
         </div>
-
+       
         {/* Account and Logout Section */}
         <div className="px-6 py-4 border-t border-gray-200">
           <ul className="space-y-1">
             {/* Account Link */}
-            <Link to="/resident/account">
+            <Link to={accountUrl}>
               <li
                 className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition
                   ${
@@ -91,7 +101,7 @@ function SidePanel({ options }) {
               <li
                 className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition
                   text-red-600 hover:bg-red-50 hover:text-red-800`}
-                  onClick={logout}
+                onClick={logout}
               >
                 <span className="h-5 w-5 text-red-500">
                   {/* Logout Icon */}
@@ -116,6 +126,7 @@ function SidePanel({ options }) {
           </ul>
         </div>
       </nav>
+      
     </div>
   );
 }

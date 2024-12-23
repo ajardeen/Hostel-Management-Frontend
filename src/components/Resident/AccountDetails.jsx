@@ -11,7 +11,7 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function AccountDetails({ residentId }) {
+export default function AccountDetails({ residentId ,role}) {
   const [isEditing, setIsEditing] = useState(false);
   const [accountDetails, setAccountDetails] = useState({
     firstName: "",
@@ -48,8 +48,8 @@ export default function AccountDetails({ residentId }) {
   };
   useEffect(() => {
     try {
-      axios
-        .get(`${api}/useraccountdetails/${residentId}`)
+      API
+        .get(`/useraccountdetails/${residentId}`)
         .then((res) => {
           console.log(res.data);
           setAccountDetails(res.data.accountDetails);
@@ -156,7 +156,7 @@ export default function AccountDetails({ residentId }) {
                   readOnly={!isEditing}
                 />
               </div>
-              <div className="space-y-2">
+              {role === "admin"?null:<><div className="space-y-2">
                 <label className="block text-sm font-medium">
                   Check In Date
                 </label>
@@ -181,7 +181,8 @@ export default function AccountDetails({ residentId }) {
                   className="w-full px-3 py-2 border rounded-md bg-gray-50"
                   readOnly={!isEditing}
                 />
-              </div>{" "}
+              </div></>}
+              
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Role</label>
                 <input

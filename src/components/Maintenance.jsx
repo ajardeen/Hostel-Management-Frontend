@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 const Maintenance = () => {
   const [loading, setLoading] = useState(true);
   const [editedIssue, setEditedIssue] = useState(null);
@@ -9,16 +9,15 @@ const Maintenance = () => {
   const [staffs, setStaffs] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState();
   const [selectedRequestId, setSelectedRequestId] = useState("");
-  //api url
-  const api = import.meta.env.VITE_API_URL;
+
 
 
   
   // Fetch issues from API
   const fetchIssues = async () => {
     try {
-      await axios
-        .get(api + "/maintenance/maintenance-requests")
+      await API
+        .get("/maintenance/maintenance-requests")
         .then((res) => {
           setMaintenanceIssue(res.data);
         })
@@ -34,8 +33,8 @@ const Maintenance = () => {
   useEffect(() => {
     const fetchStaffs = async () => {
       try {
-        await axios
-          .get(api + "/maintenance/getstaffs")
+        await API
+          .get("/maintenance/getstaffs")
           .then((res) => {
             setStaffs(res.data.staff);
            
@@ -65,12 +64,14 @@ const Maintenance = () => {
       const assignedTo = staffs.find((staff) => staff.username === selectedStaff)?._id;
       const id = issueId;
       
-      await axios
-        .put(api + "/maintenance/maintenance-requests/assign", {
+      await API
+        .put("/maintenance/maintenance-requests/assign", {
           assignedTo,
           id
         })
         .then((res) => {
+          console.log(res);
+          
           fetchIssues(); // Fetch updated data after successful assignment
           setEditedIssue(null); // Close the edit form
           setSelectedStaff(""); // Reset selected staff

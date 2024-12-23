@@ -1,4 +1,3 @@
-// ResidentPage.jsx
 import React, { useState, useEffect } from "react";
 import API from "../../api/axios";
 
@@ -8,8 +7,7 @@ const ResidentRequestStatus = ({ residentId }) => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await API.get(`/resident/maintenance/${residentId}`
-        );
+        const response = await API.get(`/resident/maintenance/${residentId}`);
         setMaintenanceRequests(response.data.filteredData);
         console.log(response.data);
       } catch (error) {
@@ -17,62 +15,65 @@ const ResidentRequestStatus = ({ residentId }) => {
       }
     };
     fetchRequests();
-  }, []);
+  }, [residentId]);
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        Your Maintenance request
+    <div className="p-8 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+      <h1 className="text-4xl font-bold mb-8 text-gray-900 border-b pb-4">
+        Maintenance Requests Dashboard
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {maintenanceRequests.map((request, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {maintenanceRequests.map((request) => (
           <div
-            key={index}
-            className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            key={request._id}
+            className="bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl transition-all duration-300 ease-in-out p-6"
           >
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-800">Status</h3>
+            {/* Status Badge */}
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-800 uppercase">Status</h2>
+              <span
+                className={`px-4 py-1 rounded-full text-sm font-medium
+                ${
+                  request.status === "In Progress"
+                    ? "bg-amber-100 text-amber-700 border border-amber-200"
+                    : request.status === "Completed"
+                    ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                    : "bg-slate-100 text-slate-700 border border-slate-200"
+                }`}
+              >
+                {request.status}
+              </span>
+            </div>
+
+            {/* Issue Details */}
+            <p className="text-gray-600 bg-gray-50 p-3 rounded-md text-sm mb-4">
+              Request : {request.issueDetails}
+            </p>
+
+            {/* Priority and Assigned To */}
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col items-center">
+                <span className="text-sm text-gray-500">Priority</span>
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium
+                  className={`mt-1 px-3 py-1 rounded-full text-xs font-semibold
                   ${
-                    request.status === "In Progress"
-                      ? "bg-yellow-100 text-yellow-800"
-                      : request.status === "Completed"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-800"
+                    request.priority === "High"
+                      ? "bg-rose-100 text-rose-700 border border-rose-200"
+                      : request.priority === "Medium"
+                      ? "bg-orange-100 text-orange-700 border border-orange-200"
+                      : "bg-sky-100 text-sky-700 border border-sky-200"
                   }`}
                 >
-                  {request.status}
+                  {request.priority}
                 </span>
               </div>
-              <hr />
-              <div className="space-y-3">
-                <div className="flex items-start">
-                  <span className="text-gray-500 w-24">Issue:</span>
-                  <p className="text-gray-700 flex-1">{request.issueDetails}</p>
-                </div>
 
-                <div className="flex items-center">
-                  <span className="text-gray-500 w-24">Priority:</span>
-                  <span
-                    className={`px-2 py-1 rounded text-sm
-                    ${
-                      request.priority === "High"
-                        ? "bg-red-100 text-red-800"
-                        : request.priority === "Medium"
-                        ? "bg-orange-100 text-orange-800"
-                        : "bg-blue-100 text-blue-800"
-                    }`}
-                  >
-                    {request.priority}
-                  </span>
-                </div>
-
-                <div className="flex items-center">
-                  <span className="text-gray-500 w-24">Assigned To : </span>
-                  <span className="text-gray-700 uppercase">{request.assignedTo}</span>
+              <div className="flex flex-col items-center gap-3">
+                <span className="text-sm font-medium text-gray-500">Assigned To</span>
+                <div className="flex items-center gap-2">
+                
+                  <span className="text-sm p-1 px-2 bg-orange-100 text-orange-700 border border-orange-200 rounded-full ">{request.assignedTo}</span>
                 </div>
               </div>
             </div>

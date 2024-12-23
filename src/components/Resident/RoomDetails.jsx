@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../../api/axios";
 import { useNavigate } from "react-router-dom";
-// import room_image1 from "../../assets/room_image1.jpg";
+import room_image1 from "../../assets/room_image 1.jpg";
 // import room_image2 from "../../assets/room_image2.jpg";
 // import room_image3 from "../../assets/room_image3.jpg";
 import {
@@ -11,12 +11,12 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 
-function RoomDetails({ residentId }) {
+function RoomDetails({ residentId ,username}) {
   const [roomDetails, setRoomDetails] = useState({});
   const [loading, setLoading] = useState(true);
   const [rendered, setRendered] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
-  
+
   // Navigate hook
   const navigate = useNavigate();
   useEffect(() => {
@@ -57,15 +57,12 @@ function RoomDetails({ residentId }) {
 
   if (loading) {
     return (
-      <div className="h-fit bg-gradient-to-br from-green-50 to-blue-50 p-8">
-        <div className="mx-auto max-w-4xl">
-          <div className="h-12 w-64 mb-8 bg-gray-200 animate-pulse rounded"></div>
+      <div className="bg-gradient-to-br from-green-50 to-blue-50 p-8">
+        <div className=" ">
+          <div className=" mb-8 bg-gray-200 animate-pulse rounded"></div>
           <div className="grid gap-6 md:grid-cols-2">
             {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className="h-48 w-full bg-gray-200 animate-pulse rounded"
-              ></div>
+              <div key={i} className=" bg-gray-200 animate-pulse rounded"></div>
             ))}
           </div>
         </div>
@@ -74,146 +71,132 @@ function RoomDetails({ residentId }) {
   }
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-8 transition-opacity duration-500 ${
-        rendered ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      <>
-        <div className="mb-2">
-          <h3 className="text-2xl font-semibold mb-1">Hey {"User"}!</h3>
-          {/* Real-time date and time display */}
-          <p className="text-gray-500 mb-4">{currentDate}</p>
-          <hr />
-        </div>
-        {roomDetails.roomNumber ? (
-          <>
-            <div className="mx-auto max-w-4xl">
-              <h1 className="text-4xl font-bold text-gray-800 mb-8">
-                Your Room Details
-              </h1>
-
-              <div className="grid gap-6 md:grid-cols-2">
-                <div
-                  className={`bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg ${
-                    rendered
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-4"
-                  }`}
-                  style={{ transitionDelay: "100ms" }}
-                >
-                  <div className="bg-green-100 p-4">
-                    <h2 className="flex items-center text-xl font-semibold text-gray-800">
-                      <HomeIcon className="h-6 w-6 text-gray-500" />
-                      Room Information
-                    </h2>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-lg font-semibold text-gray-800">
-                      Room {roomDetails.roomNumber}
-                    </p>
-                    <span className="inline-block mt-2 px-2 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full">
-                      {roomDetails.roomStatus}
-                    </span>
-                    <p className="mt-2 text-gray-600">
-                      Occupancy: {roomDetails.roomOccupancy}
-                    </p>
-                  </div>
+    <>
+      <div
+        className={`min-h-screen bg-gradient-to-br rounded-lg from-blue-50 to-orange-50 p-8 transition-opacity duration-500 ${
+          rendered ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <>
+          <div className="mb-2">
+            <h3 className="text-2xl font-semibold mb-1 uppercase">Hey! </h3>
+            {/* Real-time date and time display */}
+            <p className="text-gray-500 mb-4">{currentDate}</p>
+            <hr />
+          </div>
+          {roomDetails.roomNumber ? (
+            <>
+              <section className="flex relative p-5">
+                <HomeIcon className="h-6 w-6 text-gray-500 absolute top-10 right-0" />
+                <div>
+                  <img
+                    src={room_image1}
+                    alt="room image"
+                    className="w-72 h-60 rounded-md"
+                    style={{ transitionDelay: "100ms" }}
+                  />
                 </div>
-
-                <div
-                  className={`bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg ${
-                    rendered
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-4"
-                  }`}
-                  style={{ transitionDelay: "200ms" }}
-                >
-                  <div className="bg-blue-100 p-4">
-                    <h2 className="flex items-center text-xl font-semibold text-gray-800">
-                      <CalendarDaysIcon className="h-6 w-6 text-gray-500" />
-                      Stay Duration
-                    </h2>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-gray-600">
-                      Check In:{" "}
-                      <span className="font-semibold text-gray-800">
-                        {new Date(roomDetails.checkInDate).toLocaleDateString()}
+                <div className="flex flex-col justify-start ml-5 w-4/12 gap-3">
+                  <h2 className="text-4xl font-semibold mb-1 uppercase">
+                  {username}
+                  </h2>
+                  <h2 className="text-2xl font-semibold mb-1">
+                    Room : {roomDetails.roomNumber}{" "}
+                  </h2>
+                  <div className="flex justify-between">
+                    <div className="flex flex-col items-start gap-5">
+                      <span>
+                        <h3 className="font-bold">Check in</h3>
+                        <p>
+                          {new Date(
+                            roomDetails.checkInDate
+                          ).toLocaleDateString()}
+                        </p>
                       </span>
-                    </p>
-                    <p className="mt-2 text-gray-600">
-                      Check Out:{" "}
-                      <span className="font-semibold text-gray-800">
-                        {new Date(
-                          roomDetails.checkOutDate
-                        ).toLocaleDateString()}
+                      <span className="flex flex-col justify-center">
+                        <h3 className="font-bold">Status</h3>
+                        <span className="inline-block mt-2 px-2 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full">
+                          {roomDetails.roomStatus}
+                        </span>
                       </span>
-                    </p>
+                      <span>
+                        <h3 className="font-bold">Guest</h3>
+                        <p>{roomDetails.roomOccupancy}</p>
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-start gap-5">
+                      <span>
+                        <h3 className="font-bold">Check out</h3>
+                        <p>
+                          {new Date(
+                            roomDetails.checkOutDate
+                          ).toLocaleDateString()}
+                        </p>
+                      </span>
+                      <div className="flex justify-between">
+                        <span>
+                          <h3 className="font-bold">Room Type</h3>
+                          <p>{roomDetails.roomType}</p>
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>
+                          <h3 className="font-bold">Fees</h3>
+                          <p>₹{roomDetails.roomFees}</p>
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div
-                  className={`bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg ${
-                    rendered
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-4"
-                  }`}
-                  style={{ transitionDelay: "300ms" }}
-                >
-                  <div className="bg-green-100 p-4">
-                    <h2 className="flex items-center text-xl font-semibold text-gray-800">
-                      <CreditCardIcon className="h-6 w-6 text-gray-500" />
-                      Fees
-                    </h2>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-2xl font-bold text-green-600">
-                      ${roomDetails.roomFees}
-                    </p>
-                    <p className="mt-1 text-gray-600">per month</p>
+                  <div>
+                    <div className=" border-none w-96 p-4">
+                      <h2 className="flex items-center text-xl font-semibold text-gray-800">
+                        <UsersIcon className="h-6 w-6 text-gray-500" />
+                        Amenities
+                      </h2>
+                      <div className="border-2 border-orange-300"></div>
+                    </div>
+                    <div className="p-4 py-2">
+                      <ul className="list-disc list-inside text-gray-600">
+                        <li>Free Wi-Fi</li>
+                        <li>Air Conditioning</li>
+                        <li>Daily Housekeeping</li>
+                        <li>24/7 Security</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-
-                <div
-                  className={`bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg ${
-                    rendered
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-4"
-                  }`}
-                  style={{ transitionDelay: "400ms" }}
+              </section>
+              <div className="flex justify-end mt-8">
+                <button
+                  onClick={() => navigate(`/resident/invoice/`)}
+                  className="inline-flex items-center px-4 py-2 bg-orange-300 border border-transparent rounded-md font-semibold text-black hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 gap-2"
                 >
-                  <div className="bg-blue-100 p-4">
-                    <h2 className="flex items-center text-xl font-semibold text-gray-800">
-                      <UsersIcon className="h-6 w-6 text-gray-500" />
-                      Amenities
-                    </h2>
-                  </div>
-                  <div className="p-4">
-                    <ul className="list-disc list-inside text-gray-600">
-                      <li>Free Wi-Fi</li>
-                      <li>Air Conditioning</li>
-                      <li>Daily Housekeeping</li>
-                      <li>24/7 Security</li>
-                    </ul>
-                  </div>
-                </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-5"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+                    />
+                  </svg>
+                  Checkout
+                </button>
               </div>
-            </div>
-            <div className="flex justify-center mt-8">
-              <button
-                onClick={() => navigate(`/resident/invoice/${residentId}`)}
-                className="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >
-                Checkout
-              </button>
-            </div>
-          </>
-        ) : (
-          <h1>No Room assigned</h1>
-        )}
-      </>
-    </div>
+              <hr className="my-4" />
+            </>
+          ) : (
+            <h1>No Room assigned</h1>
+          )}
+        </>
+      </div>
+    </>
   );
 }
 

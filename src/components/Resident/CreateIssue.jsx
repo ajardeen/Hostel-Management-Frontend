@@ -26,19 +26,19 @@ const CreateIssue = ({ residentId }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg shadow-md mt-8">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">Report an Issue</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg mt-8">
+      <h2 className="text-2xl font-semibold text-primary-dark mb-6">Report an Issue</h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Resident ID Display */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-600">
             Resident ID
           </label>
           <input
             type="text"
             value={residentId || ""}
             readOnly
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 focus:outline-none"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
 
@@ -46,7 +46,7 @@ const CreateIssue = ({ residentId }) => {
         <div>
           <label
             htmlFor="issueDetails"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-600"
           >
             Issue Details
           </label>
@@ -56,7 +56,8 @@ const CreateIssue = ({ residentId }) => {
             onChange={(e) => setIssueDetails(e.target.value)}
             required
             placeholder="Describe the issue..."
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+            rows="4"
           ></textarea>
         </div>
 
@@ -64,7 +65,7 @@ const CreateIssue = ({ residentId }) => {
         <div>
           <label
             htmlFor="priority"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-600"
           >
             Priority
           </label>
@@ -72,7 +73,7 @@ const CreateIssue = ({ residentId }) => {
             id="priority"
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
           >
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
@@ -84,7 +85,7 @@ const CreateIssue = ({ residentId }) => {
         <div>
           <button
             type="submit"
-            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-primary text-white bg-black font-medium rounded-md hover:bg-primary-dark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
             Submit Issue
           </button>

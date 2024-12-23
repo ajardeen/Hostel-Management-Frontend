@@ -1,13 +1,13 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { LoginStatusContext } from "../pages/HomePage";
 import logotext from "../assets/hosteledge logo.png";
 import logo from "../assets/hosteledge logo text.png";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../services/AuthProvider";
 export const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { loginStatus, setLoginStatus } = useContext(LoginStatusContext);
+  const { user } = useAuth();
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -83,41 +83,24 @@ export const NavBar = () => {
 
           {/* Login and Signup Links */}
           <div className="hidden lg:flex lg:items-center lg:space-x-10">
-            {loginStatus == false ? (
-              <Link to={"/register"}>
-                <span
-                  onClick={closeMenu}
-                  className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
-                >
-                  Sign up
-                </span>
-              </Link>
-            ) : null}
-            <Link to={"/"}>
-              {loginStatus ? (
-                <span
-                  onClick={() => {
-                    if (loginStatus) {
-                      toast.success("Successfully sign out");
-                      setLoginStatus(false);
-                    }
+            <Link to={"/register"}>
+              <span
+                onClick={closeMenu}
+                className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
+              >
+                Sign up
+              </span>
+            </Link>
 
-                    closeMenu();
-                  }}
-                  className="py-2 text-base font-medium  border-red-600 text-red-600 transition-all duration-200 focus:text-red-600"
-                >
-                  Sign out
-                </span>
-              ) : (
-                <span
-                  onClick={() => {
-                    closeMenu();
-                  }}
-                  className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
-                >
-                  Sign in
-                </span>
-              )}
+            <Link to={"/"}>
+              <span
+                onClick={() => {
+                  closeMenu();
+                }}
+                className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
+              >
+                Sign in
+              </span>
             </Link>
           </div>
         </nav>
@@ -136,7 +119,7 @@ export const NavBar = () => {
                 {link}
               </span>
             ))}
-            {loginStatus == false ? (
+            {user == false ? (
               <Link to={"/register"}>
                 <span
                   onClick={closeMenu}
@@ -146,31 +129,15 @@ export const NavBar = () => {
                 </span>
               </Link>
             ) : null}
-            <Link to={"/"}>
-              {loginStatus ? (
-                <span
-                  onClick={() => {
-                    if (loginStatus) {
-                      toast.success("Successfully sign out");
-                      setLoginStatus(false);
-                    }
-
-                    closeMenu();
-                  }}
-                  className="py-2 text-base font-medium  transition-all duration-200 focus:text-red-600 border-red-600 text-red-600"
-                >
-                  Sign out
-                </span>
-              ) : (
-                <span
-                  onClick={() => {
-                    closeMenu();
-                  }}
-                  className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
-                >
-                  Sign in
-                </span>
-              )}
+            <Link to="/">
+              <span
+                onClick={() => {
+                  closeMenu();
+                }}
+                className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
+              >
+                Sign in
+              </span>
             </Link>
           </nav>
         )}

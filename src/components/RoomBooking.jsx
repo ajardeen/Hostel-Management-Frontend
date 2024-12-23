@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 function RoomBooking() {
   const [room, setRoom] = useState({});
   const [residents, setResidents] = useState([]);
-  const adminAPI = import.meta.env.VITE_ADMIN_API_URL;
   const { roomid } = useParams();
   const [selectedResidentId, setSelectedResidentId] = useState(null);
   const [bookingData, setBookingData] = useState({
@@ -26,21 +26,23 @@ function RoomBooking() {
       }
   });
 
-  //api url
-  const admin_api = import.meta.env.VITE_ADMIN_API_URL;
+
   useEffect(() => {
     console.log("residents=", residents);
   }, [residents]);
 
   useEffect(() => {
-    // Fetch resident details from the API
-    const fetchResidentDetailsAPI = async () => {
+  
+
+    // Fetch room details from the API
+    const fetchRoomDetailsAPI = async () => {
       try {
-        await axios
-          .get(`${adminAPI}/getresidents`)
+        await API
+          .get(`/getroombyid/${roomid}`)
           .then((res) => {
-            console.log(res.data);
-            setResidents(res.data.residentData);
+            console.log("res=", res);
+            setRoom(res.data.room);
+            setResidents(res.data.filteredResidentData);
           })
           .catch((err) => {
             console.log(err);
@@ -50,23 +52,6 @@ function RoomBooking() {
       }
     };
 
-    // Fetch room details from the API
-    const fetchRoomDetailsAPI = async () => {
-      try {
-        await axios
-          .get(`${adminAPI}/getroombyid/${roomid}`)
-          .then((res) => {
-            console.log(res);
-            setRoom(res.data.room);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchResidentDetailsAPI();
     fetchRoomDetailsAPI();
   }, []);
   useEffect(() => {
@@ -74,7 +59,7 @@ function RoomBooking() {
       ...bookingData,
       residentId: residents.find(
         (resident) => resident.username === selectedResidentId
-      )?.residentid,
+      )?.residentId,
     });
   }, [selectedResidentId]);
 
@@ -89,8 +74,8 @@ function RoomBooking() {
     console.log("Booking Data:", bookingData);
 
     try {
-      await axios
-        .post(admin_api + "/room-assignment", bookingData)
+      await API
+        .post("/room-assignment", bookingData)
         .then((res) => {
           console.log(res);
           toast.success(res.data.message);
