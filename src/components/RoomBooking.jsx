@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import API from "../api/axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function RoomBooking() {
+  const navigate = useNavigate();
   const [room, setRoom] = useState({});
   const [residents, setResidents] = useState([]);
   const { roomid } = useParams();
@@ -16,44 +17,35 @@ function RoomBooking() {
     checkInDate: "",
     checkOutDate: "",
     status: "Checked In",
-    utilities: { 
-        washing: 200,
-        electricity: 500,
-        water: 0,
-        internet: 0,
-        maintenance: 200,
-        cleaning: 150,
-      }
+    utilities: {
+      washing: 200,
+      electricity: 500,
+      water: 0,
+      internet: 0,
+      maintenance: 200,
+      cleaning: 150,
+    },
   });
-
 
   useEffect(() => {
     console.log("residents=", residents);
   }, [residents]);
 
   useEffect(() => {
-  
-
-    // Fetch room details from the API
     const fetchRoomDetailsAPI = async () => {
       try {
-        await API
-          .get(`/getroombyid/${roomid}`)
-          .then((res) => {
-            console.log("res=", res);
-            setRoom(res.data.room);
-            setResidents(res.data.filteredResidentData);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        const res = await API.get(`/getroombyid/${roomid}`);
+        setRoom(res.data.room);
+        setResidents(res.data.filteredResidentData);
       } catch (error) {
         console.log(error);
+        toast.error("Failed to fetch room details");
       }
     };
 
     fetchRoomDetailsAPI();
-  }, []);
+  }, [roomid]);
+
   useEffect(() => {
     setBookingData({
       ...bookingData,
@@ -63,212 +55,167 @@ function RoomBooking() {
     });
   }, [selectedResidentId]);
 
-  // assign room to resident
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (selectedResidentId == "selectedResidentId") {
-      alert("Please select a resident");
+    if (selectedResidentId === "selectedResidentId") {
+      toast.error("Please select a resident");
       return;
     }
 
-    console.log("Booking Data:", bookingData);
-
     try {
-      await API
-        .post("/room-assignment", bookingData)
-        .then((res) => {
-          console.log(res);
-          toast.success(res.data.message);
-        })
-        .catch((err) => {
-          console.log(err);
-          toast.error(err.response.data.message);
-        });
+      const res = await API.post("/room-assignment", bookingData);
+      if(res){
+        toast.success(res.data.message);
+        setTimeout(() => {
+          navigate('/admin/rooms');
+        }, 2000);
+      }
+      
+     
     } catch (error) {
-      toast.error(error);
-      console.log(error);
+      toast.error(error.response?.data?.message || "Booking failed");
     }
   };
 
   return (
-    <div className=" mx-auto mt-10 p-6 bg-white rounded-lg shadow-md ">
-      <h2 className="text-2xl font-bold mb-4">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          x="0px"
-          y="0px"
-          width="100"
-          height="100"
-          viewBox="0 0 40 40"
-        >
-          <path
-            fill="#dff0fe"
-            d="M3.5,38.5V13.3L20,3.6l16.5,9.7v25.2H3.5z"
-          ></path>
-          <path
-            fill="#4788c7"
-            d="M20,4.2l16,9.4V38H4V13.6L20,4.2 M20,3L3,13v26h34V13L20,3L20,3z"
-          ></path>
-          <path
-            fill="#b6dcfe"
-            d="M20,4.6L1.5,16v-3.1L20,1.6l18.5,11.3V16L20,4.6z"
-          ></path>
-          <path
-            fill="#4788c7"
-            d="M20,2.2l18,11v1.9L20.5,4.4L20,4.1l-0.5,0.3L2,15.1v-1.9L20,2.2 M20,1L1,12.6v4.2L20,5.2l19,11.6v-4.2L20,1	L20,1z"
-          ></path>
-          <path fill="#b6dcfe" d="M14.5,21.5h11v17h-11V21.5z"></path>
-          <path
-            fill="#4788c7"
-            d="M25,22v16H15V22H25 M26,21H14v18h12V21L26,21z"
-          ></path>
-          <path
-            fill="#4788c7"
-            d="M23,30c-0.6,0-1,0.4-1,1s0.4,1,1,1s1-0.4,1-1S23.6,30,23,30z"
-          ></path>
-        </svg>
-        Book a Room
-      </h2>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="p-3 border rounded-lg bg-gray-50">
-          <span className="font-semibold">Room Number:</span>
-          <span className="ml-2">{room.roomNumber}</span>
-        </div>
-        <div className="p-3 border rounded-lg bg-gray-50">
-          <span className="font-semibold">Type:</span>
-          <span className="ml-2">{room.type}</span>
-        </div>
-        <div className="p-3 border rounded-lg bg-gray-50">
-          <span className="font-semibold">Capacity:</span>
-          <span className="ml-2">{room.capacity}</span>
-        </div>
-        <div className="p-3 border rounded-lg bg-gray-50">
-          <span className="font-semibold">Occupied:</span>
-          <span className="ml-2">{room.occupied}</span>
-        </div>
-        <div className="p-3 border rounded-lg bg-gray-50">
-          <span className="font-semibold">Availability Status:</span>
-          <span className="ml-2">{room.availabilityStatus}</span>
-        </div>
-        <div className="p-3 border rounded-lg bg-gray-50">
-          <span className="font-semibold">Features:</span>
-          <span className="ml-2">
-            AC: {room.features?.AC ? "Yes" : "No"}, WIFI:{" "}
-            {room.features?.WIFI ? "Yes" : "No"}
-          </span>
-        </div>
-      </div>
-      <div className="p-3 border rounded-lg bg-green-100 my-2 w-full">
-        FILL FORM DATA TO BOOK ROOM
-      </div>
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-2 gap-4 gap-x-10 mt-2"
-      >
-        <div className="mb-4">
-          <label className="block text-gray-700">Check In Date</label>
-          <input
-            type="date"
-            name="checkInDate"
-            value={bookingData.checkInDate}
-            onChange={(e) =>
-              setBookingData({ ...bookingData, checkInDate: e.target.value })
-            }
-            className="w-full px-3 py-2 border rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Check Out Date</label>
-          <input
-            type="date"
-            name="checkOutDate"
-            value={bookingData.checkOutDate}
-            onChange={(e) => {
-              setBookingData({ ...bookingData, checkOutDate: e.target.value });
-            }}
-            className="w-full px-3 py-2 border rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Number of Occupants</label>
-          <input
-            type="number"
-            name="occupied"
-            value={bookingData.occupied}
-            onChange={(e) =>
-              setBookingData({ ...bookingData, occupied: e.target.value })
-            }
-            className="w-full px-3 py-2 border rounded"
-            min="1"
-            max={room.capacity-room.occupied}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Status</label>
-          <select
-            name="status"
-            value={bookingData.status}
-            onChange={(e) =>
-              setBookingData({ ...bookingData, status: e.target.value })
-            }
-            className="w-full px-3 py-2 border rounded"
-            required
-          >
-            <option value="Checked In">Checked In</option>
-            <option value="Checked Out">Checked Out</option>
-            <option value="Reserved">Reserved</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Room Preferences</label>
-          <div className="block text-gray-700 border p-2">
-            {room.preferences}
-          </div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Resident Preferences</label>
-          <div
-            className={`w-full px-3 py-2 border rounded ${
-              selectedResidentId &&
-              residents
-                .find((r) => r.username === selectedResidentId)
-                ?.preferences.includes(room.preferences)
-                ? "bg-green-100"
-                : "bg-red-100"
-            }`}
-          >
-            {selectedResidentId
-              ? residents.find((r) => r.username === selectedResidentId)
-                  ?.preferences || "No preferences"
-              : "Select a resident to see preferences"}
-          </div>
-        </div>
-        {/* resident select  */}
-        <div className="mb-4">
-          <label className="block text-gray-700">Select Resident</label>
-          <select
-            className="w-full px-3 py-2 border rounded"
-            onChange={(e) => setSelectedResidentId(e.target.value)}
-            required
-          >
-            <option value="selectedResidentId">Select a resident</option>
-            {residents.map((resident) => (
-              <option key={resident.residentid} value={resident.username}>
-                {resident.username}
-              </option>
-            ))}
-          </select>
-        </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-6">
         <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+          onClick={() => navigate('/admin/rooms')}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
         >
-          Book Room
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Rooms
         </button>
-      </form>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-4">
+            <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            Room Booking
+          </h1>
+
+          <div className="mt-4 md:mt-0 p-4 bg-blue-50 rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <p className="font-semibold">Room #{room.roomNumber}</p>
+                <p>Type: {room.type}</p>
+                <p>Capacity: {room.capacity}</p>
+              </div>
+              <div className="space-y-2">
+                <p>Status: <span className="font-medium text-green-600">{room.availabilityStatus}</span></p>
+                <p>Occupied: {room.occupied}/{room.capacity}</p>
+                <p>Features: {room.features?.AC ? "AC, " : ""}{room.features?.WIFI ? "WiFi" : ""}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Check In Date</label>
+              <input
+                type="date"
+                value={bookingData.checkInDate}
+                onChange={(e) => setBookingData({ ...bookingData, checkInDate: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Check Out Date</label>
+              <input
+                type="date"
+                value={bookingData.checkOutDate}
+                onChange={(e) => setBookingData({ ...bookingData, checkOutDate: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Number of Occupants</label>
+              <input
+                type="number"
+                value={bookingData.occupied}
+                onChange={(e) => setBookingData({ ...bookingData, occupied: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                min="1"
+                max={(room.capacity - room.occupied) || 1}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+              <select
+                value={bookingData.status}
+                onChange={(e) => setBookingData({ ...bookingData, status: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                required
+              >
+                <option value="Checked In">Checked In</option>
+                <option value="Checked Out">Checked Out</option>
+                <option value="Reserved">Reserved</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Select Resident</label>
+              <select
+                onChange={(e) => setSelectedResidentId(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                required
+              >
+                <option value="selectedResidentId">Select a resident</option>
+                {residents.map((resident, index) => (
+                  <option key={index} value={resident.username}>
+                    {resident.username}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Room Preferences</label>
+              <div className="p-4 bg-gray-50 rounded-lg min-h-[60px]">
+                {room.preferences || "No preferences set"}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Resident Preferences</label>
+              <div className={`p-4 rounded-lg min-h-[60px] ${
+                selectedResidentId && residents.find((r) => r.username === selectedResidentId)?.preferences.includes(room.preferences)
+                  ? "bg-green-50"
+                  : "bg-red-50"
+              }`}>
+                {selectedResidentId
+                  ? residents.find((r) => r.username === selectedResidentId)?.preferences || "No preferences"
+                  : "Select a resident to see preferences"}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end mt-8">
+            <button
+              type="submit"
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:ring-4 focus:ring-blue-200"
+            >
+              Complete Booking
+            </button>
+          </div>
+        </form>
+      </div>
       <ToastContainer />
     </div>
   );

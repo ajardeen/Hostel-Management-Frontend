@@ -48,16 +48,16 @@ const BarChart = () => {
       {
         label: "Revenue",
         data: revenueAmounts,
-        backgroundColor: "rgba(75, 192, 192, 0.7)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
+        backgroundColor: "rgba(53, 162, 235, 0.8)",
+        borderColor: "rgba(53, 162, 235, 1)",
+        borderWidth: 2,
       },
       {
         label: "Expenses",
         data: expensesAmounts,
-        backgroundColor: "rgba(255, 99, 132, 0.7)",
+        backgroundColor: "rgba(255, 99, 132, 0.8)",
         borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 1,
+        borderWidth: 2,
       },
     ],
   };
@@ -68,15 +68,56 @@ const BarChart = () => {
       title: {
         display: true,
         text: "Revenue vs Expenses",
+        font: {
+          size: 20,
+          weight: 'bold'
+        },
+        color: '#2c3e50'
       },
       legend: {
         position: "top",
-      },
+        labels: {
+          font: {
+            size: 14
+          },
+          usePointStyle: true,
+          padding: 20
+        }
+      }
     },
+    scales: {
+      y: {
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)'
+        },
+        ticks: {
+          font: {
+            size: 12
+          }
+        }
+      },
+      x: {
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)'
+        },
+        ticks: {
+          font: {
+            size: 12
+          }
+        }
+      }
+    }
   };
 
   return (
-    <div style={{ width: "600px", margin: "0 auto" }}>
+    <div style={{ 
+      width: "800px", 
+      margin: "20px auto",
+      padding: "20px",
+      backgroundColor: "white",
+      borderRadius: "10px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+    }}>
       <Bar data={data} options={options} />
     </div>
   );

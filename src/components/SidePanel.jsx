@@ -9,7 +9,7 @@ function SidePanel({ options, username, useremail }) {
   const accountUrl = `/${role}/account`;
 
   return (
-    <div className="flex flex-col items-center h-[98vh] bg-[#f5f7f9] rounded-tl-3xl">
+    <div className="flex flex-col items-center h-[40rem] bg-[#f5f7f9] rounded-tl-3xl">
        <div className="flex-shrink-0 justify-center items-center mt-2 rounded-tl-3xl">
           <span className="flex justify-center items-center  bg-gradient-to-r from-green-200 to-[#f5f7f9] rounded-lg px-4 py-1">
             <img className="w-auto h-8 lg:h-10" src={logotext} alt="Logo" />
@@ -43,7 +43,9 @@ function SidePanel({ options, username, useremail }) {
 
         {/* Menu Options */}
         <div className="flex-grow overflow-y-auto">
-          <ul className="mt-4 space-y-1">
+          <h3 className="text-start  text-blue-500 p-1 pl-10 font-bold text-lg">Menu</h3>
+          <div className="border-2 border-blue-500 ml-1"></div>
+          <ul className="mt-2 space-y-1">
             {options.map((option, index) => (
               <Link key={index} to={option.link}>
                 <li

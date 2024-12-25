@@ -63,11 +63,11 @@ const RoomForm = () => {
   };
 
   return (
-    <>
+    <div className="p-6 bg-gray-100 ">
       <h2 className="text-2xl font-semibold text-[#333] mb-4 uppercase text-center">
-        Add Room
+       Room Form
       </h2>
-    
+
       <form
         className="font-[sans-serif] text-[#333] max-w-4xl  px-6 my-6 mx-auto"
         onSubmit={handleSubmit}
@@ -84,6 +84,7 @@ const RoomForm = () => {
               onChange={(e) => setRoomNumber(e.target.value)}
               placeholder="eg.A101"
               required
+              autoFocus
               className="px-2 pt-5 pb-2 bg-white w-full text-sm border-b-2 border-gray-100 focus:border-[#333] outline-none"
             />
           </div>
@@ -107,7 +108,7 @@ const RoomForm = () => {
 
           <div className="relative flex items-center">
             <label className="text-[13px] absolute top-[-10px] left-0">
-              Capacity
+              Guest Capacity
             </label>
             <input
               type="number"
@@ -123,7 +124,7 @@ const RoomForm = () => {
 
           <div className="relative flex items-center">
             <label className="text-[13px] absolute top-[-10px] left-0">
-              Room Fees ₹
+              Room Fees $
             </label>
             <input
               type="number"
@@ -131,7 +132,7 @@ const RoomForm = () => {
               value={roomfees}
               min={1}
               onChange={(e) => setRoomfees(e.target.value)}
-              placeholder="Enter your room fees ₹"
+              placeholder="Enter your room fees $"
               required
               className="px-2 pt-5 pb-2 bg-white w-full text-sm border-b-2 border-gray-100 focus:border-[#333] outline-none"
             />
@@ -139,7 +140,7 @@ const RoomForm = () => {
 
           <div className="relative flex items-center">
             <label className="text-[13px] absolute top-[-10px] left-0">
-              Availability Status
+              Select Availability 
             </label>
             <select
               name="availabilityStatus"
@@ -205,16 +206,16 @@ const RoomForm = () => {
         </div>
 
         <div className="flex justify-end">
-        <button
-          type="submit"
-          className="mt-10 w-fit px-6  py-2.5 rounded-lg text-sm bg-[#333] hover:bg-[#222] text-white "
-        >
-          Submit
-        </button>
+          <button
+            type="submit"
+            className="mt-10 w-fit px-6  py-2.5 rounded-lg text-sm bg-[#333] hover:bg-[#222] text-white "
+          >
+            Submit
+          </button>
         </div>
         <ToastContainer />
       </form>
-    </>
+    </div>
   );
 };
 

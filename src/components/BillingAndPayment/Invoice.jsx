@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../api/axios";
 import logo from "../../assets/hosteledge logo.png";
-
+import PayPalButton from "./PayPalButton";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Invoice = ({ residentId }) => {
-  const [invoiceData, setInvoiceData] = useState({});
+  const [invoiceData, setInvoiceData] = useState(null);
   const navigate = useNavigate();
-  const api = import.meta.env.VITE_API_URL;
+ 
 
   useEffect(() => {
     const fetchInvoiceData = async () => {
@@ -24,10 +26,16 @@ const Invoice = ({ residentId }) => {
     } else {
       navigate("/resident");
     }
-  }, [residentId, api, navigate]);
+  }, [residentId]);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 max-w-xl mx-auto">
+    <>
+    {!invoiceData ? (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    ) : (
+    <div className="bg-white rounded-lg shadow-lg p-4 max-w-lg mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
@@ -36,13 +44,15 @@ const Invoice = ({ residentId }) => {
         </div>
         <div className="text-gray-700">
           <div className="font-bold text-base">INVOICE</div>
-          <div className="text-xs">Date: {new Date(invoiceData.invoiceDate).toLocaleDateString()}</div>
+          <div className="text-xs">
+            Date: {new Date(invoiceData.invoiceDate).toLocaleDateString()}
+          </div>
           <div className="text-xs">#{invoiceData.invoiceNumber}</div>
         </div>
       </div>
 
       {/* Hostel and Resident Information */}
-      <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+      <div className="flex justify-between gap-4 text-sm mb-4">
         <div>
           <h2 className="font-bold mb-1">Hostel Details:</h2>
           <div className="text-gray-700">HosteLedge</div>
@@ -58,62 +68,77 @@ const Invoice = ({ residentId }) => {
       </div>
 
       {/* Items Table */}
-      <table className="w-full text-left text-sm mb-4">
+      <table className="w-full text-sm mb-4">
         <thead>
           <tr className="border-b">
-            <th className="py-1">Description</th>
-            <th className="py-1">Amount</th>
+            <th className="py-2 text-left">Description</th>
+            <th className="py-2 text-right pr-4">Amount</th>
           </tr>
         </thead>
         <tbody>
-          {[
-            ['Room Fees', invoiceData.roomfees],
-            ['Washing', invoiceData.washing],
-            ['Electricity', invoiceData.electricity],
-            ['Water', invoiceData.water],
-            ['Internet', invoiceData.internet],
-            ['Maintenance', invoiceData.maintenance],
-            ['Cleaning', invoiceData.cleaning],
-          ].map(([desc, amount]) => (
-            <tr key={desc} className="border-b">
-              <td className="py-1">{desc}</td>
-              <td className="py-1">₹{amount}</td>
-            </tr>
-          ))}
+          <tr className="border-b">
+            <td className="py-2">Room Fees</td>
+            <td className="py-2 text-right pr-4">${invoiceData.roomfees}</td>
+          </tr>
+          <tr className="border-b">
+            <td className="py-2">Washing</td>
+            <td className="py-2 text-right pr-4">${invoiceData.washing}</td>
+          </tr>
+          <tr className="border-b">
+            <td className="py-2">Electricity</td>
+            <td className="py-2 text-right pr-4">${invoiceData.electricity}</td>
+          </tr>
+          <tr className="border-b">
+            <td className="py-2">Water</td>
+            <td className="py-2 text-right pr-4">${invoiceData.water}</td>
+          </tr>
+          <tr className="border-b">
+            <td className="py-2">Internet</td>
+            <td className="py-2 text-right pr-4">${invoiceData.internet}</td>
+          </tr>
+          <tr className="border-b">
+            <td className="py-2">Maintenance</td>
+            <td className="py-2 text-right pr-4">${invoiceData.maintenance}</td>
+          </tr>
+          <tr className="border-b">
+            <td className="py-2">Cleaning</td>
+            <td className="py-2 text-right pr-4">${invoiceData.cleaning}</td>
+          </tr>
         </tbody>
       </table>
-
       {/* Totals */}
       <div className="text-sm">
         <div className="flex justify-between py-1">
           <span>Subtotal:</span>
-          <span>₹{invoiceData.subTotal}</span>
+          <span>${invoiceData.subTotal}</span>
         </div>
         <div className="flex justify-between py-1">
           <span>Tax:</span>
-          <span>₹{invoiceData.tax}</span>
+          <span>${invoiceData.tax}</span>
         </div>
         <div className="flex justify-between py-1 font-bold">
           <span>Total:</span>
-          <span>₹{invoiceData.total}</span>
+          <span>${invoiceData.total}</span>
         </div>
       </div>
       <div className="flex justify-center mt-8 items-center">
-        <button
-          onClick={() => navigate(`/resident/payment/${residentId}`)}
-          className="inline-flex w-full justify-center items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          PayNow : ₹{invoiceData.total}
-        </button>
+        <div className="flex justify-center mt-8 items-center">
+        <PayPalButton invoiceDetails={invoiceData} />
+        </div>
       </div>
-
+      
       {/* Footer */}
       <div className="text-xs text-gray-700 mt-4">
-        <div>Payment is due within 30 days. Late payments are subject to a 5% fee.</div>
+        <div>
+          Payment is due within 30 days. Late payments are subject to a 5% fee.
+        </div>
         <div>Queries: billing@hosteledge.com</div>
         <div>Thank you for staying with HosteLedge!</div>
       </div>
+      <ToastContainer />
     </div>
+    )}
+    </>
   );
 };
 

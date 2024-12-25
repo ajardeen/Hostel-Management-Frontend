@@ -29,7 +29,6 @@ export default function LoginPage() {
   //user Login
   const handleSubmit = async (e) => {
     e.preventDefault();
-  console.log("role",role);
   
     // Handle form submission to login user
     try {
@@ -37,7 +36,6 @@ export default function LoginPage() {
       await API
         .post("/login", { email, password })
         .then((res) => {
-          console.log("res", res);
           toast.success(res.data.message);
 
           localStorage.setItem(

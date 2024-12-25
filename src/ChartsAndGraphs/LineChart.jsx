@@ -13,18 +13,41 @@ ChartJS.register(
   Legend
 );
 
-const LineChart = () => {
+const LineChart = ({ revenueData, expensesData }) => {
+  const monthLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  
   const data = {
-    labels: ['July', 'August', 'September', 'October', 'November', 'December'],
+    labels: monthLabels,
     datasets: [
       {
         label: 'Revenue',
-        data: [65, 59, 80, 81, 56, 55],
+        data: monthLabels.map((month) => {
+          const monthData = revenueData?.find(item => item._id === month);
+          return monthData ? monthData.totalAmount : 0;
+        }),
         fill: false,
-        borderColor: 'rgb(75, 192, 192)',
+        borderColor: '#000000',
+        backgroundColor: '#ffffff',
+        borderWidth: 2,
+        pointBackgroundColor: '#000000',
+        pointBorderColor: '#000000',
         tension: 0.1,
       },
-    ],
+      {
+        label: 'Expenses',
+        data: monthLabels.map((month) => {
+          const monthData = expensesData?.find(item => item._id === month);
+          return monthData ? monthData.totalAmount : 0;
+        }),
+        fill: false,
+        borderColor: '#FF0000',
+        backgroundColor: '#ffffff',
+        borderWidth: 2,
+        pointBackgroundColor: '#FF0000',
+        pointBorderColor: '#FF0000',
+        tension: 0.1,
+      }
+    ]
   };
 
   const options = {
@@ -32,15 +55,39 @@ const LineChart = () => {
     plugins: {
       title: {
         display: true,
-        text: 'Monthly Revenue',
+        text: 'Monthly Revenue vs Expenses',
+        color: '#000000',
+      },
+      legend: {
+        labels: {
+          color: '#000000',
+        },
       },
     },
-    maintainAspectRatio: false, // Allows for custom sizing
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        grid: {
+          color: '#e0e0e0',
+        },
+        ticks: {
+          color: '#000000',
+        },
+      },
+      y: {
+        grid: {
+          color: '#e0e0e0',
+        },
+        ticks: {
+          color: '#000000',
+        },
+      },
+    },
   };
 
   return (
-    <div style={{ width: '600px', height: '300px' }}> {/* Smaller size */}
-      <h2>Revenue Chart</h2>
+    <div style={{ width: '600px', height: '300px', backgroundColor: '#ffffff' }}>
+      <h2 style={{ color: '#000000' }}>Revenue vs Expenses Chart</h2>
       <Line data={data} options={options} />
     </div>
   );

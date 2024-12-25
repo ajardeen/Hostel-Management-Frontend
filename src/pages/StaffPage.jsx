@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Routes, Route } from "react-router-dom";
 import SidePanel from "../components/SidePanel";
+
 import {
   HomeIcon,
   UserIcon,
@@ -11,10 +12,11 @@ import {
   ClipboardDocumentIcon,
 } from "@heroicons/react/24/solid";
 import AccountDetails from "../components/Resident/AccountDetails";
-import Maintenance from "../components/Staffs/Maintenance";
+import StaffMaintenanceRequests from "../components/Staffs/StaffMaintenanceRequests";
 
 function StaffPage() {
   const [currentDate, setCurrentDate] = useState("");
+
 
   const icons = {
     dashboard: <HomeIcon className="h-6 w-6 text-gray-500" />,
@@ -27,9 +29,7 @@ function StaffPage() {
   };
 
   const [options, setOptions] = useState([
-    { name: "Maintenance", link: "/staff/maintenance", icon: icons.maintenance },
-    
-    
+    { name: "Maintenance", link: "/staff", icon: icons.maintenance },
   ]);
 
   //real-time date and time display function
@@ -56,12 +56,10 @@ function StaffPage() {
 
   const useremail = useMemo(() => {
     const userInfo = JSON.parse(localStorage.getItem("userData"));
-    console.log(userInfo);
-
     return userInfo ? userInfo.email : "useremail";
   }, []);
 
-  const residentId = useMemo(() => {
+  const requestId = useMemo(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     return userData ? userData.userid : "id not found";
   }, []);
@@ -70,24 +68,29 @@ function StaffPage() {
     return userData ? userData.role : "role not found";
   }, []);
 
+ 
   return (
     <div className="flex gap-5 bg-[#f5f7f9] m-2 rounded-tl-3xl ">
+      
       {/* <UserNavBar /> */}
       <SidePanel options={options} username={username} useremail={useremail} />
       {/* Routes for different components */}
       <div className="bg-white p-5 mt-5 min-w-[75rem] max-h-[43rem] border-2  rounded-tl-3xl overflow-y-scroll">
         <div className="mb-2">
-          <h3 className="text-2xl font-semibold mb-1">Hey {username}!</h3>
+          <span className="flex items-center gap-2  ">
+          <h3 className="text-2xl font-semibold mb-1">Hey {username}!</h3> 
+          <h4 className="uppercase text-xs text-green-900  bg-green-300  w-fit px-3 py-1 rounded-xl">{role}</h4>
+          </span>
           {/* Real-time date and time display */}
           <p className="text-gray-500 mb-4">{currentDate}</p>
           <hr />
         </div>
 
         <Routes>
-          <Route path="/maintenance" element={<Maintenance />} />
+          <Route path="/" element={<StaffMaintenanceRequests requestId={requestId}/>} />
           <Route
             path="/account"
-            element={<AccountDetails residentId={residentId} role={role} />}
+            element={<AccountDetails residentId={requestId} role={role} />}
           />
         </Routes>
       </div>

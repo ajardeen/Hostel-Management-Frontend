@@ -6,7 +6,6 @@ import SidePanel from "../components/SidePanel";
 import { useState, useMemo } from "react";
 import RoomDetails from "../components/Resident/RoomDetails";
 import Invoice from "../components/BillingAndPayment/Invoice";
-import Payment from "../components/BillingAndPayment/Payment";
 import AccountDetails from "../components/Resident/AccountDetails";
 import {
   HomeIcon,
@@ -73,7 +72,6 @@ const username = useMemo(() => {
             path="/invoice"
             element={<Invoice residentId={residentId} />}
           />
-          <Route path="/payment/:residentId" element={<Payment />} />
           <Route
             path="/account"
             element={<AccountDetails residentId={residentId} role={role} />}

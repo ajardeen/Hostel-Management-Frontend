@@ -6,8 +6,6 @@ import Rooms from "../components/Rooms";
 import Maintenance from "../components/Maintenance";
 import RoomBooking from "../components/RoomBooking";
 import SidePanel from "../components/SidePanel";
-import Billing from "../components/BillingAndPayment/Invoice";
-import Checkout from "../components/BillingAndPayment/Payment";
 import {
   HomeIcon,
   UserIcon,
@@ -18,6 +16,8 @@ import {
   ClipboardDocumentIcon,
 } from "@heroicons/react/24/solid";
 import AccountDetails from "../components/Resident/AccountDetails";
+import Payment from "../components/Payments";
+import ManageAssignments from "../components/ManageAssignments";
 
 function AdminPage() {
   const[currentDate, setCurrentDate] = useState("");
@@ -38,6 +38,8 @@ function AdminPage() {
     { name: "Room Form", link: "/admin/roomform", icon: icons.form },
     { name: "Rooms", link: "/admin/rooms" , icon: icons.room},
     { name: "Maintenance", link: "/admin/maintenance" , icon: icons.maintenance},
+    { name: "Payments", link: "/admin/payments" , icon: icons.form},
+    { name: "Manage Assignments", link: "/admin/manageassignment" , icon: icons.assignRoom},
   ]);
 
   //real-time date and time display function
@@ -84,7 +86,10 @@ function AdminPage() {
       {/* Routes for different components */}
       <div className="bg-white p-5 mt-5 min-w-[75rem] max-h-[43rem] border-2  rounded-tl-3xl overflow-y-scroll">
         <div className="mb-2">
-          <h3 className="text-2xl font-semibold mb-1">Hey {username}!</h3>
+        <span className="flex items-center gap-2 ">
+          <h3 className="text-2xl font-semibold mb-1">Hey {username}!</h3> 
+          <h4 className="uppercase text-xs text-orange-900  bg-orange-300  w-fit px-3 py-1 rounded-xl">{role}</h4>
+          </span>
         {/* Real-time date and time display */}
         <p className="text-gray-500 mb-4">
           {currentDate}
@@ -98,8 +103,8 @@ function AdminPage() {
           <Route path="/rooms" element={<Rooms />} />
           <Route path="/maintenance" element={<Maintenance />} />
           <Route path="/rooms/book-room/:roomid" element={<RoomBooking />} />
-          <Route path="/invoice" element={<Billing />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route  path="/payments" element={<Payment />} />
+          <Route path="/manageassignment" element={<ManageAssignments />} />
           <Route
             path="/account"
             element={<AccountDetails residentId={residentId} role={role} />}

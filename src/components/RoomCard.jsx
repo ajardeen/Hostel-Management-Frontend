@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import roomimage2 from "../assets/room_image 2.jpg";
 const RoomCard = ({ room }) => {
   const navigate = useNavigate();
 
@@ -10,6 +10,7 @@ const RoomCard = ({ room }) => {
 
   return (
     <div className="w-[300px] bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <img src={roomimage2} alt="image" />
       <div className="p-4">
         {/* Room status and number */}
         <div className="flex justify-between items-center mb-3">
@@ -31,7 +32,8 @@ const RoomCard = ({ room }) => {
           </div>
 
           {/* Features */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 justify-between">
+            <span>
             <span className={`px-2 py-1 rounded text-xs ${
               room.features.AC ? "bg-green-50 text-green-700" : "bg-gray-50 text-gray-600"
             }`}>
@@ -42,7 +44,11 @@ const RoomCard = ({ room }) => {
             }`}>
               {room.features.WIFI ? "WiFi" : "No WiFi"}
             </span>
+            </span>
+            {/* Room fees  */}
+          <div className="text-right text-lg text-orange-500">${room.roomfees}</div>
           </div>
+          
         </div>
 
         {/* Book button */}
