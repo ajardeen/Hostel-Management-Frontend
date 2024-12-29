@@ -3,26 +3,29 @@ import registerSideImage1 from "../assets/register-side-image 1.webp";
 import registerSideImage2 from "../assets/register-side-image 2.webp";
 import registerSideImage3 from "../assets/register-side-image 3.avif";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api/axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../services/AuthProvider";
+import LoadingButton from "../components/LoadingButton";
+import { motion } from "framer-motion";
 
 export default function RegisterPage() {
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const api = import.meta.env.VITE_API_URL;
-
+  const { login } = useAuth();
   const images = [registerSideImage1, registerSideImage2, registerSideImage3];
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % images.length);
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -37,37 +40,80 @@ export default function RegisterPage() {
     }
     // Handle form submission to register user
     try {
-      await axios
-        .post(api + "/register", { username, email, password })
-        .then((res) => {
-          console.log(res);
-          toast.success(res.data.message, "Redirecting to login page");
-          setTimeout(() => {
-            navigate("/");
-          }, 4000);
+      setIsLoading(true);
+      const res = await API.post("/register", { username, email, password });
+      toast.success(res.data.message, "Redirecting to login page");
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          token: res.data.token,
+          userid: res.data.userid,
+          role: res.data.role,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
+          username: res.data.username,
+          email: res.data.email,
         })
-        .catch((err) => {
-          console.log(err);
-          toast.error(err);
-        });
+      );
+      login(res.data.token, res.data.role);
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate(`/`);
+      }, 1200);
     } catch (error) {
+      setIsLoading(false);
+      toast.error("Registration failed");
       console.log(error);
     }
   };
 
-  return (
-    <div className="flex min-h-screen justify-center items-center bg-white">
-      {/* Left Side - Sign Up Form */}
-      <div className="w-full lg:w-1/2 px-6 py-12 lg:px-16 xl:px-24">
-        <div className="max-w-md mx-auto">
-          <h1 className="text-2xl font-semibold mb-1">Register</h1>
-          <p className="text-gray-500 mb-8">Student Registration page</p>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
+  };
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+  const formVariants = {
+    hidden: { x: -100, opacity: 0 },
+    visible: { x: 0, opacity: 1, transition: { duration: 0.6, type: "spring" } },
+  };
+
+  const imageVariants = {
+    hidden: { x: 100, opacity: 0 },
+    visible: { x: 0, opacity: 1, transition: { duration: 0.6, type: "spring" } },
+  };
+
+  return (
+    <motion.div
+      className="relative flex min-h-screen  justify-center items-center bg-gradient-to-br from-purple-100 to-blue-100"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+
+    >
+      <motion.div
+                className="absolute top-6 text-4xl font-bold text-end mr-72 w-full py-8 text-gray-800"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                Hostel Management System
+              </motion.div>
+    <div className="flex flex-col lg:flex-row w-full h-full mt-14">
+      {/* Left Side - Sign Up Form */}
+      <motion.div
+        className="w-full lg:w-1/2 px-6 py-12 lg:px-16 xl:px-24"
+        variants={formVariants}
+      >
+        <div className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">
+            Create Account
+          </h1>
+          
+          <form onSubmit={handleSubmit} className="space-y-3">
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Username
               </label>
@@ -75,8 +121,8 @@ export default function RegisterPage() {
                 <input
                   type="text"
                   id="username"
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                  placeholder="Email address"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-shadow duration-300 ease-in-out"
+                  placeholder="Your username"
                   value={username}
                   required
                   onChange={(e) => setUserName(e.target.value)}
@@ -86,7 +132,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Email
               </label>
@@ -94,8 +140,8 @@ export default function RegisterPage() {
                 <input
                   type="email"
                   id="email"
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                  placeholder="Email address"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-shadow duration-300 ease-in-out"
+                  placeholder="Your email address"
                   value={email}
                   required
                   onChange={(e) => setEmail(e.target.value)}
@@ -106,7 +152,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Password
               </label>
@@ -114,8 +160,8 @@ export default function RegisterPage() {
                 <input
                   type="password"
                   id="password"
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                  placeholder="Password (min. 8 character)"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-shadow duration-300 ease-in-out"
+                  placeholder="Your password (min. 8 character)"
                   value={password}
                   required
                   onChange={(e) => setPassword(e.target.value)}
@@ -126,7 +172,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Confirm Password
               </label>
@@ -134,7 +180,7 @@ export default function RegisterPage() {
                 <input
                   type="password"
                   id="confirmPassword"
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-shadow duration-300 ease-in-out"
                   placeholder="Retype password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -162,45 +208,52 @@ export default function RegisterPage() {
               </label>
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-purple-600 text-white py-2.5 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-            >
-              Signup
-            </button>
-            
+            <LoadingButton
+              isLoading={isLoading}
+              text={"Signup"}
+              style={
+                "w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-300"
+              }
+            />
           </form>
 
           <p className="mt-8 text-center text-sm text-gray-600 flex justify-center gap-1">
             Already have an account?{" "}
             <Link to={"/"}>
-              <span className="text-purple-600 hover:text-purple-500">
+              <span className="text-purple-600 hover:text-purple-500 transition-colors duration-200">
                 Login now
               </span>
             </Link>
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Right Side - Preview */}
-      <div className="hidden lg:block lg:w-1/2 bg-gray-50">
+      <motion.div
+        className="hidden lg:block lg:w-1/2 "
+        variants={imageVariants}
+      >
         <div className="h-full flex items-center justify-center px-8">
           <div className="max-w-2xl">
             <div className="relative">
               <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-                <img
+                <motion.img
                   src={images[currentSlide]}
                   alt="Dashboard preview"
-                  className="w-full rounded-lg"
+                  className="w-[40rem] rounded-lg object-cover"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
                 />
               </div>
 
               <div className="text-center">
-              <h2 className="text-3xl font-bold mb-4">
+                <h2 className="text-3xl font-bold mb-4 text-gray-800">
                   Share And Care
                 </h2>
-                <p className="text-gray-500">
-                Best Place to Share and relax yourself feel like home and Secure
+                <p className="text-gray-600">
+                  Best Place to Share and relax yourself feel like home and
+                  Secure
                 </p>
 
                 <div className="flex justify-center gap-2 mt-6">
@@ -209,8 +262,10 @@ export default function RegisterPage() {
                       key={index}
                       onClick={() => setCurrentSlide(index)}
                       className={`w-2 h-2 rounded-full ${
-                        currentSlide === index ? "bg-gray-800" : "bg-gray-300"
-                      }`}
+                        currentSlide === index
+                          ? "bg-purple-600"
+                          : "bg-gray-300 hover:bg-gray-400"
+                      } transition-colors duration-300`}
                     />
                   ))}
                 </div>
@@ -218,8 +273,9 @@ export default function RegisterPage() {
             </div>
           </div>
         </div>
-      </div>
-      <ToastContainer />
+      </motion.div>
     </div>
+      <ToastContainer />
+    </motion.div>
   );
 }

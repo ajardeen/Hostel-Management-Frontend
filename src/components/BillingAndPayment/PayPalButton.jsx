@@ -21,10 +21,17 @@ const PayPalButton = ({ invoiceDetails }) => {
   const checkoutAndUpdateRevenue = async () => {
     try {
       await API.post("/checkoutAndUpdateRevenue", payment)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res);
+          toast.success("Checkout and revenue update successful");
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Failed to update checkout and revenue");
+        });
     } catch (error) {
       console.log(error);
+      toast.error("Error during checkout process");
     }
   };
 
@@ -41,11 +48,19 @@ const PayPalButton = ({ invoiceDetails }) => {
         lateFee: 0,
         billingAmount: invoiceDetails.total,
         paymentStatus: "Paid",
+        invoiceDetails: invoiceDetails,
       })
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res);
+          toast.success("Billing created successfully");
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Failed to create billing");
+        });
     } catch (error) {
       console.log(error);
+      toast.error("Error creating billing");
     }
   };
 
@@ -127,7 +142,7 @@ const PayPalButton = ({ invoiceDetails }) => {
             });
           } catch (error) {
             console.error("Error creating order:", error);
-            alert("An error occurred while creating the order.");
+            toast.error("An error occurred while creating the order");
             return Promise.reject(error);
           }
         }}
@@ -135,7 +150,7 @@ const PayPalButton = ({ invoiceDetails }) => {
           try {
             const details = await actions.order.capture();
             const payerName = details?.payer?.name?.given_name || "Customer";
-            toast.success(`Payment successful`);
+            toast.success(`Payment successful! Thank you for your payment, ${payerName}`);
             {
               setTimeout(() => {
                 navigate("/resident");
@@ -143,15 +158,15 @@ const PayPalButton = ({ invoiceDetails }) => {
             }
             checkoutAndUpdateRevenue();
             createBilling();
-            console.log("Payment Details:", details);
+            console.log("Payment Details:",payerName, details);
           } catch (error) {
             console.error("PayPal Capture Error:", error);
-            alert("An error occurred while capturing the payment.");
+            toast.error("An error occurred while capturing the payment");
           }
         }}
         onError={(err) => {
           console.error("PayPal Checkout Error:", err);
-          alert("There was an error processing your payment.");
+          toast.error("There was an error processing your payment");
         }}
       />
     </PayPalScriptProvider>

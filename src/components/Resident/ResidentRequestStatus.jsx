@@ -24,9 +24,9 @@ const ResidentRequestStatus = ({ residentId }) => {
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {maintenanceRequests.map((request) => (
+        {maintenanceRequests.map((request,index) => (
           <div
-            key={request._id}
+            key={index}
             className="bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl transition-all duration-300 ease-in-out p-6"
           >
             {/* Status Badge */}

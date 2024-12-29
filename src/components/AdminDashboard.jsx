@@ -39,34 +39,35 @@ function AdminDashboard() {
             <div className="shadow-lg p-10">
               <LineChart revenueData={revenueData} expensesData={expensesData} />
             </div>
-            <div className="w-full bg-white rounded-lg shadow-lg p-6">
+            <div className="w-full bg-gray-800 rounded-lg shadow-lg p-6">
               <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-semibold text-gray-800">
+                <h1 className="text-2xl font-semibold text-white">
                   Staff Members
                 </h1>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-300">
                   {dashboardData.staffData.staffNames.length} Active
                 </span>
               </div>
-              <hr className="mb-6 border-gray-200" />
+              <hr className="mb-6 border-gray-700" />
               <div className="space-y-4">
                 {dashboardData.staffData.staffNames.map((name, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-sm"
+                    className="flex items-center justify-between p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all duration-300 shadow-md border border-gray-600"
                   >
                     <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold shadow-md">
+                      <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-semibold shadow-md relative">
+                        <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-500 to-gray-700 rounded-full opacity-20"></span>
                         {name.charAt(0)}
                       </div>
                       <div>
-                        <h3 className="text-gray-800 font-medium">{name}</h3>
-                        <p className="text-sm text-gray-500">Staff Member</p>
+                        <h3 className="text-white font-medium">{name}</h3>
+                        <p className="text-sm text-gray-300">Staff Member</p>
                       </div>
                     </div>
                     <div className="flex items-center">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                        <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-900 text-white border border-gray-600">
+                        <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
                         Active
                       </span>
                     </div>
@@ -76,7 +77,7 @@ function AdminDashboard() {
             </div>
           </section>
           <hr className="mt-10" />
-          <section className="flex gap-1">
+          <section className="flex  flex-col gap-1 w-fit">
             <div className="flex mt-1">
               <InfoContainer
                 value={dashboardData.roomData.netWorth}
@@ -159,7 +160,7 @@ function AdminDashboard() {
                       <p className="text-gray-600 text-sm font-medium">Room Statistics</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                     <div className="space-y-2">
                       <p className="text-gray-600 text-sm">Total Rooms</p>
                       <p className="text-2xl font-bold text-blue-600">{dashboardData.roomData.totalRooms}</p>

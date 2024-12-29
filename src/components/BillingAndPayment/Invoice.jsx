@@ -32,7 +32,7 @@ const Invoice = ({ residentId }) => {
     <>
     {!invoiceData ? (
       <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500">No Data</div>
       </div>
     ) : (
     <div className="bg-white rounded-lg shadow-lg p-4 max-w-lg mx-auto">
@@ -81,6 +81,10 @@ const Invoice = ({ residentId }) => {
             <td className="py-2 text-right pr-4">${invoiceData.roomfees}</td>
           </tr>
           <tr className="border-b">
+            <td className="py-2">Room occupied</td>
+            <td className="py-2 text-right pr-4">{invoiceData.occupied}</td>
+          </tr>
+          <tr className="border-b">
             <td className="py-2">Washing</td>
             <td className="py-2 text-right pr-4">${invoiceData.washing}</td>
           </tr>
@@ -108,15 +112,15 @@ const Invoice = ({ residentId }) => {
       </table>
       {/* Totals */}
       <div className="text-sm">
-        <div className="flex justify-between py-1">
+        <div className="flex justify-end  gap-2 py-1">
           <span>Subtotal:</span>
           <span>${invoiceData.subTotal}</span>
         </div>
-        <div className="flex justify-between py-1">
-          <span>Tax:</span>
+        <div className="flex justify-end gap-2 py-1">
+          <span>Tax 10% :</span>
           <span>${invoiceData.tax}</span>
         </div>
-        <div className="flex justify-between py-1 font-bold">
+        <div className="flex justify-end gap-2 py-1 font-bold">
           <span>Total:</span>
           <span>${invoiceData.total}</span>
         </div>

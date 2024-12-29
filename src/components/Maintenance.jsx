@@ -10,6 +10,7 @@ const Maintenance = () => {
   const [selectedStaff, setSelectedStaff] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [issueToDelete, setIssueToDelete] = useState(null);
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
   
   // Fetch issues from API
   const fetchIssues = async () => {
@@ -85,6 +86,8 @@ const Maintenance = () => {
           id
         })
         .then((res) => {
+          console.log(res.data);
+          
           toast.success("Staff assigned successfully");
           fetchIssues();
           setEditedIssue(null);
@@ -100,6 +103,14 @@ const Maintenance = () => {
       toast.error("Error assigning staff");
     }
   };
+
+    const handleCreateExpenseClick = () => {
+        setShowExpenseModal(true);
+    };
+
+    const handleCloseExpenseModal = () => {
+        setShowExpenseModal(false);
+    };
 
   if (loading) {
     return (
@@ -123,7 +134,34 @@ const Maintenance = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-100">
-       <RegisterExpense/>
+    <div className="flex justify-end">
+      <button 
+        onClick={handleCreateExpenseClick}
+        className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-2 border-blue-500 rounded-full group hover:border-blue-700"
+        >
+        <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-blue-500 group-hover:translate-x-0 ease">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-2 inline-block">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </span>
+        <span className="absolute flex items-center justify-center w-full h-full text-blue-500 transition-all duration-300 transform group-hover:translate-x-full ease">Create Expense</span>
+        <span className="relative invisible">Create Expense</span>
+      </button>
+    </div>
+    {showExpenseModal && <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+                <div className="flex justify-end">
+                    <button onClick={handleCloseExpenseModal} className="text-gray-500 hover:text-gray-700">
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <RegisterExpense onClose={handleCloseExpenseModal}/>
+            </div>
+        </div>
+    </div>}
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Maintenance Issues
       </h2>
@@ -144,8 +182,8 @@ const Maintenance = () => {
               <tr key={issue._id}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                    issue.priority === 'high' ? 'bg-red-100 text-red-800' :
-                    issue.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                    issue.priority === 'High' ? 'bg-red-100 text-red-800' :
+                    issue.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
                     'bg-green-100 text-green-800'
                   }`}>
                     {issue.priority}
@@ -259,6 +297,7 @@ const Maintenance = () => {
           </div>
         </div>
       )}
+        
     </div>
   );
 };

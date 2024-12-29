@@ -8,7 +8,8 @@ function HomePage() {
   return (
     <>
       <NavBar />
-      <Routes>
+                <Routes>
+        
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Routes>

@@ -41,11 +41,11 @@ const Payment = () => {
                   <span className="bg-green-100 text-green-600 text-sm font-medium px-2 py-1 rounded">
                     Pro
                   </span>
-                  <span className="ml-3 text-sm text-gray-600">Payment yearly</span>
+                  <span className="ml-3 text-sm text-gray-600">Payment Received</span>
                 </div>
                 <p className="text-lg font-bold text-gray-800 mt-1">${totalPayments.toFixed(2)} USD</p>
                 <p className="text-sm text-gray-500 mt-1">
-                  (next renew 1 JAN 2025)
+                  (2024 year - 2025 year)
                 </p>
               </div>
               <div>

@@ -17,7 +17,8 @@ export const NavBar = () => {
   };
 
   return (
-    <header className="bg-white lg:py-3 ">
+    <>
+    <header className=" lg:py-3 bg-gradient-to-br from-purple-100 to-blue-100 h-16  z-50">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 ">
         <nav className="relative flex items-center justify-between h-16 bg-white lg:rounded-md lg:shadow-lg lg:h-24 lg:px-8 lg:py-6 z-30">
           <div className="flex-shrink-0">
@@ -68,7 +69,7 @@ export const NavBar = () => {
 
           {/* Desktop Links */}
           <div className="hidden ml-10 lg:flex lg:items-center lg:mr-auto lg:space-x-10">
-            {["Features", "Solutions", "Resources", "Pricing"].map((link) => (
+            {["Contact", "About Us", "Location", "Pricing"].map((link) => (
               <span
                 key={link}
                 href="#"
@@ -144,5 +145,7 @@ export const NavBar = () => {
       </div>
       <ToastContainer />
     </header>
+    
+    </>
   );
 };

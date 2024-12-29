@@ -11,7 +11,7 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 
-function RoomDetails({ residentId ,username}) {
+function RoomDetails({ residentId ,username,getRoomId}) {
   const [roomDetails, setRoomDetails] = useState({});
   const [loading, setLoading] = useState(true);
   const [rendered, setRendered] = useState(false);
@@ -25,6 +25,7 @@ function RoomDetails({ residentId ,username}) {
         const response = await API.get(`/resident/room/${residentId}`);
         console.log(response.data);
         setRoomDetails(response.data.roomDetails);
+        getRoomId(response.data.roomDetails.roomId);
       } catch (err) {
         console.log(err);
       } finally {
@@ -142,7 +143,7 @@ function RoomDetails({ residentId ,username}) {
                       <div className="flex justify-between">
                         <span>
                           <h3 className="font-bold">Fees</h3>
-                          <p>₹{roomDetails.roomFees}</p>
+                          <p>${roomDetails.roomFees}</p>
                         </span>
                       </div>
                     </div>

@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import CreateIssue from "../components/Resident/CreateIssue";
 import ResidentRequestStatus from "../components/Resident/ResidentRequestStatus";
 import SidePanel from "../components/SidePanel";
-import { useState, useMemo } from "react";
+import { useState, useMemo,useCallback } from "react";
 import RoomDetails from "../components/Resident/RoomDetails";
 import Invoice from "../components/BillingAndPayment/Invoice";
 import AccountDetails from "../components/Resident/AccountDetails";
@@ -16,7 +16,14 @@ import {
   WrenchIcon,
   ClipboardDocumentIcon,
 } from "@heroicons/react/24/solid";
+
+
 function ResidentPage() {
+  const [roomId, setRoomId] = useState(null);
+
+  const getRoomId = useCallback((id) => {
+    setRoomId(id);
+  })
    const icons = {
       dashboard: <HomeIcon className="h-6 w-6 text-gray-500" />,
       account: <UserIcon className="h-6 w-6 text-gray-500" />,
@@ -62,7 +69,7 @@ const username = useMemo(() => {
         <Routes>
           <Route
             path="/create-issue"
-            element={<CreateIssue residentId={residentId} />}
+            element={<CreateIssue residentId={residentId} roomId={roomId} />}
           />
           <Route
             path="/resident-request-status"
@@ -76,7 +83,7 @@ const username = useMemo(() => {
             path="/account"
             element={<AccountDetails residentId={residentId} role={role} />}
           />
-          <Route path="/" element={<RoomDetails residentId={residentId} username={username}/>} />
+          <Route path="/" element={<RoomDetails residentId={residentId} username={username} getRoomId={getRoomId} />} />
         </Routes>
       </div>
     </div>

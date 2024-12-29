@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../services/AuthProvider";
 import logotext from "../assets/hosteledge logo.png";
@@ -7,9 +7,14 @@ function SidePanel({ options, username, useremail }) {
   const location = useLocation();
   const { role, logout } = useAuth();
   const accountUrl = `/${role}/account`;
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredOptions = options.filter(option =>
+    option.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="flex flex-col items-center h-[40rem] bg-[#f5f7f9] rounded-tl-3xl">
+    <div className="flex flex-col items-center h-[47rem] bg-[#f5f7f9] rounded-tl-3xl">
        <div className="flex-shrink-0 justify-center items-center mt-2 rounded-tl-3xl">
           <span className="flex justify-center items-center  bg-gradient-to-r from-green-200 to-[#f5f7f9] rounded-lg px-4 py-1">
             <img className="w-auto h-8 lg:h-10" src={logotext} alt="Logo" />
@@ -37,6 +42,8 @@ function SidePanel({ options, username, useremail }) {
           <input
             type="text"
             placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-4 py-2 bg-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
@@ -46,7 +53,7 @@ function SidePanel({ options, username, useremail }) {
           <h3 className="text-start  text-blue-500 p-1 pl-10 font-bold text-lg">Menu</h3>
           <div className="border-2 border-blue-500 ml-1"></div>
           <ul className="mt-2 space-y-1">
-            {options.map((option, index) => (
+            {filteredOptions.map((option, index) => (
               <Link key={index} to={option.link}>
                 <li
                   className={`flex items-center px-4 py-2 my-2 text-sm font-medium rounded-lg transition
